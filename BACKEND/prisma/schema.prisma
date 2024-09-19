@@ -1,14 +1,49 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String
+  email         String    @unique
+  role          String    // "professor" or "student"
+  identification String
+  studentAppointments Citas[] @relation("StudentCitas")
+  professorAppointments Citas[] @relation("ProfessorCitas")
+  Disponibilidad Disponibilidad[]  // Disponibilidad del profesor
+}
+
+model Disponibilidad {
+  id           Int      @id @default(autoincrement())
+  professor    User     @relation(fields: [professorId], references: [id])
+  professorId  Int
+  date         DateTime
+}
+
+model Citas {
+  id            Int       @id @default(autoincrement())
+  student       User      @relation(fields: [studentId], references: [id], name: "StudentCitas")
+  studentId     Int
+  professor     User      @relation(fields: [professorId], references: [id], name: "ProfessorCitas")
+  professorId   Int
+  date          DateTime  // Fecha de la cita
+  mode          String    // "virtual" o "presencial"
+  status        String    // "pending", "accepted", "rejected"
+  tickets       Ticket[]  // Relación uno a muchos con Ticket
+}
+
+model Ticket {
+  id            Int       @id @default(autoincrement())
+  citasId       Int
+  citas         Citas     @relation(fields: [citasId], references: [id])
+  studentName   String
+  studentEmail  String
+  studentId     String     // Identificación del estudiante
+  createdAt     DateTime   @default(now())
+  status        String     // Estado de la cita (esperando, aceptada, rechazada)
 }
