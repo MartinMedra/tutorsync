@@ -11,6 +11,7 @@ model User {
   id            Int       @id @default(autoincrement())
   name          String
   email         String    @unique
+  password      String
   role          String    // "professor" or "student"
   identification String
   studentAppointments Citas[] @relation("StudentCitas")
@@ -22,7 +23,10 @@ model Disponibilidad {
   id           Int      @id @default(autoincrement())
   professor    User     @relation(fields: [professorId], references: [id])
   professorId  Int
-  date         DateTime
+  date         DateTime // Fecha de la disponibilidad
+  startTime   DateTime // Hora de inicio de la disponibilidad
+  endTime     DateTime // Hora de finalización de la disponibilidad
+  createdAt   DateTime @default(now()) // Para tener un registro de cuándo se agregó
 }
 
 model Citas {
