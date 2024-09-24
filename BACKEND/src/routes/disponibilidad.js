@@ -10,9 +10,8 @@ const prisma = new PrismaClient(); // Instancia de PrismaClient
 router.get("/profesor/disponibilidad", async (req, res) => {
   const { date, professorId, startTime, endTime } = req.body;
 
-  if (end <= start) {
-    return res
-      .status(400)
+  if (endTime <= startTime) {
+    return res.status(400)
       .json({
         error: "La hora de finalización debe ser después de la hora de inicio",
       });
@@ -23,8 +22,8 @@ router.get("/profesor/disponibilidad", async (req, res) => {
       data: {
         date: new Date(date),
         professorId,
-        startTime: start,
-        endTime: end,
+        startTime,
+        endTime,
       },
     });
     res.json(disponibilidad);

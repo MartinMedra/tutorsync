@@ -1,5 +1,6 @@
 import express from "express";
 import auth from "./routes/auth.js";
+import disponibilidad from "./routes/disponibilidad.js";
 import 'dotenv/config';
 
 const app = express();
@@ -12,6 +13,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", auth);
+app.use("/", disponibilidad);
 
 app.listen(3000);
 console.log("Server on port", 3000);
