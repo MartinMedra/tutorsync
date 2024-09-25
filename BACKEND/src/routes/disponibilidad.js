@@ -7,7 +7,7 @@ const prisma = new PrismaClient(); // Instancia de PrismaClient
 //----------------------------------- Rutas de disponibilidad PROFESOR -----------------------------------
 
 //Crear disponibilidad de un profesor
-router.get("/profesor/disponibilidad", async (req, res) => {
+router.post("/profesor/disponibilidad", async (req, res) => {
   const { date, professorId, startTime, endTime } = req.body;
 
   if (endTime <= startTime) {
