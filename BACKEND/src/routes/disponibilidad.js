@@ -36,17 +36,18 @@ router.post("/profesor/disponibilidad", async (req, res) => {
 
 //Obtener disponibilidad de un profesor
 router.get("/profesor/disponibilidad/:id", async (req, res) => {
-  const { professorId } = req.params;
+  const { id } = req.params; // Cambiar "professorId" a "id"
 
   try {
     const disponibilidad = await prisma.disponibilidad.findMany({
-      where: { professorId: parseInt(professorId) },
+      where: { professorId: parseInt(id) }, // Cambiar "professorId" a "id" también aquí
     });
     res.json(disponibilidad);
   } catch (error) {
     res.status(500).json({error: "Error al obtener disponibilidad", details: error.message});
   }
 });
+
 
 // Actualizar disponibilidad
 router.put("/profesor/disponibilidad/:id", async (req, res) => {

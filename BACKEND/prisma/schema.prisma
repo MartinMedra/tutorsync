@@ -27,6 +27,7 @@ model Disponibilidad {
   startTime   DateTime // Hora de inicio de la disponibilidad
   endTime     DateTime // Hora de finalización de la disponibilidad
   createdAt   DateTime @default(now()) // Para tener un registro de cuándo se agregó
+  Citas       Citas[]  // Relación uno a muchos con Citas
 }
 
 model Citas {
@@ -36,6 +37,10 @@ model Citas {
   professor     User      @relation(fields: [professorId], references: [id], name: "ProfessorCitas")
   professorId   Int
   date          DateTime  // Fecha de la cita
+  startTime     DateTime  // Hora de inicio de la cita
+  endTime       DateTime  // Hora de fin de la cita
+  disponibilidad     Disponibilidad @relation(fields: [disponibilidadId], references: [id]) // Agregar la relación
+  disponibilidadId Int     // Relación con la disponibilidad
   mode          String    // "virtual" o "presencial"
   status        String    // "pending", "accepted", "rejected"
   tickets       Ticket[]  // Relación uno a muchos con Ticket
