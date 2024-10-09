@@ -7,7 +7,7 @@ export default function AccordionHome() {
   return (
     <Accordion>
       <AccordionItem key="1" aria-label="Accordion 1" title="Tratamiento de Datos">
-        
+        {defaultContent}
       </AccordionItem>
       <AccordionItem key="2" aria-label="Accordion 2" title="Terminos y Condiciones">
         {defaultContent}

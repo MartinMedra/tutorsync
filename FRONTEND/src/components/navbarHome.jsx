@@ -1,5 +1,6 @@
 import React from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button} from "@nextui-org/react";
+import {Link as LinkScroll } from "react-scroll";
 
 export default function NavbarHome() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -18,35 +19,33 @@ export default function NavbarHome() {
   ];
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
+    <Navbar onMenuOpenChange={setIsMenuOpen} className="bg-black bg-transparent">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
-        <NavbarBrand>TutorSync</NavbarBrand>
+        <NavbarBrand className="text-gray-300 font-semibold">TutorSync</NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <LinkScroll href="#" className="text-gray-300 hover:text-rosado">
             Sobre Nosotros
-          </Link>
+          </LinkScroll>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
+        <NavbarItem >
+          <LinkScroll to="hero" smooth={true} duration={1000} className="text-gray-300 hover:text-rosado">
             Politicas y Tratamientos
-          </Link>
+          </LinkScroll>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Link href="#">Iniciar Sesión</Link>
+          <Link href="#" className="text-gray-300 font-bold hover:text-rosado">Iniciar Sesión</Link>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Registrate
-          </Button>
+          <button className="botonRegistro">Registrate</button>
         </NavbarItem>
       </NavbarContent>
       <NavbarMenu>

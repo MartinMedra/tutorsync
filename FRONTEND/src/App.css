@@ -1,4 +1,124 @@
 body{
   margin: 0;
-  background-color: black;
+  background-color: #000000;
 }
+
+.containerHero {
+  width: 100%;
+  height: 100%;
+  /* Add your background pattern here */
+  background-color: #313131;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.171) 2px, transparent 0);
+  background-size: 30px 30px;
+  background-position: -5px -5px
+}
+
+/*Botón de hero*/
+
+/* From Uiverse.io by adamgiebl */ 
+.buttonHero {
+  position: relative;
+  display: inline-block;
+  margin: 15px;
+  padding: 15px 30px;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  color: #ffff;
+  background: transparent;
+  cursor: pointer;
+  transition: ease-out 0.5s;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 0 #ffff;
+}
+
+.buttonHero:hover {
+  background-color: white;
+  box-shadow: inset 0 -100px 0 0 #ffff;
+}
+
+.buttonHero:active {
+  transform: scale(0.9);
+}
+
+
+/*Botón de Registro*/
+
+/* From Uiverse.io by zanina-yassine */ 
+.botonRegistro {
+  min-width: 100px;
+
+  position: relative;
+  cursor: pointer;
+
+  padding: 10px 17px;
+  border: 0;
+  border-radius: 7px;
+
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: radial-gradient(
+    ellipse at bottom,
+    rgba(71, 81, 92, 1) 0%,
+    rgba(11, 21, 30, 1) 45%
+  );
+
+  color: rgb(255, 255, 255, 0.66);
+
+  transition: all 1s cubic-bezier(0.15, 0.83, 0.66, 1);
+}
+
+.botonRegistro::before {
+  content: "";
+  width: 70%;
+  height: 1px;
+
+  position: absolute;
+  bottom: 0;
+  left: 15%;
+
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    #FF346F 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  opacity: 0.2;
+
+  transition: all 1s cubic-bezier(0.15, 0.83, 0.66, 1);
+}
+
+.botonRegistro:hover {
+  color: rgb(255, 255, 255, 1);
+  transform: scale(1.1) translateY(-3px);
+}
+
+.botonRegistro:hover::before {
+  opacity: 1;
+}
+
+
+/*Card Para AboutUs*/
+
+.cardAbout {
+  background-image: linear-gradient(163deg, #FF346F 0%, #3700ff 100%);
+  border-radius: 20px;
+  transition: all .3s;
+ }
+ 
+ .cardAbout2 {
+  background-color: #1a1a1a;
+  border-radius:;
+  transition: all .2s;
+ }
+ 
+ .cardAbout2:hover {
+  transform: scale(0.98);
+  border-radius: 20px;
+ }
+ 
+ .cardAbout:hover {
+  box-shadow: 0px 0px 30px 1px  rgba(166, 55, 217, 0.497);
+ }
