@@ -31,7 +31,7 @@ module.exports = {
       },
     },
     boxShadow: {
-      'white-glow': '0 2px 45px 0px #ff346f',  // sombra suave blanca
+      'white-glow': '0 2px 45px 0px #ffff',  // sombra suave blanca
     },
   },
   darkMode: "class",

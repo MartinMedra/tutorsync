@@ -1,9 +1,11 @@
-import React from "react";
+import {useState} from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button} from "@nextui-org/react";
 import {Link as LinkScroll } from "react-scroll";
+import LoginModal from "./loginModal";
 
 export default function NavbarHome() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   const menuItems = [
     "Profile",
@@ -19,30 +21,36 @@ export default function NavbarHome() {
   ];
 
   return (
+    <>
     <Navbar onMenuOpenChange={setIsMenuOpen} className="bg-black bg-transparent">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="sm:hidden"
+          className="sm:hidden bg-white"
         />
         <NavbarBrand className="text-gray-300 font-semibold">TutorSync</NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarItem>
+          <LinkScroll to="hero" smooth={true} duration={1000} className="text-gray-300 cursor-pointer hover:text-rosado">
+            Inicio
+          </LinkScroll>
+        </NavbarItem>
         <NavbarItem>
-          <LinkScroll href="#" className="text-gray-300 hover:text-rosado">
-            Sobre Nosotros
+          <LinkScroll to="aboutUs" smooth={true} duration={1000} className="text-gray-300 cursor-pointer hover:text-rosado">
+            Nosotros
           </LinkScroll>
         </NavbarItem>
         <NavbarItem >
-          <LinkScroll to="hero" smooth={true} duration={1000} className="text-gray-300 hover:text-rosado">
-            Politicas y Tratamientos
+          <LinkScroll to="politics" smooth={true} duration={1000} className="text-gray-300 cursor-pointer hover:text-rosado">
+            Politicas
           </LinkScroll>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#" className="text-gray-300 font-bold hover:text-rosado">Iniciar Sesión</Link>
+        <NavbarItem className="hidden lg:flex cursor-pointer">
+          <Link onClick={() => setIsLoginOpen(true)} className="text-gray-300 font-bold hover:text-rosado">Iniciar Sesión</Link>
         </NavbarItem>
         <NavbarItem>
           <button className="botonRegistro">Registrate</button>
@@ -65,5 +73,9 @@ export default function NavbarHome() {
         ))}
       </NavbarMenu>
     </Navbar>
+
+<LoginModal isOpen={isLoginOpen} closeModal={() => setIsLoginOpen(false)} />
+
+</>
   );
 }

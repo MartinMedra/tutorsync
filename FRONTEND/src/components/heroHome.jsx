@@ -1,8 +1,14 @@
 import CalendarImage from '../assets/Calendar.png';
+import LoginModal from './loginModal';
+import { useState } from 'react';
+
 
 export default function HeroHome() {
+
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
   return (
-    <section className="min-h-screen text-gray-600 body-font shadow-white-glow">
+    <section className="min-h-screen flex justify-center items-center text-gray-600 body-font shadow-white-glow" id="hero">
       <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
         {/* Texto a la derecha */}
         <div className="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center">
@@ -12,7 +18,7 @@ export default function HeroHome() {
           Ya sea virtual o presencial, gestiona fácilmente tus citas y sigue tu progreso académico.
           </p>
           <div className="flex justify-center">
-            <button className="buttonHero inline-flex text-white bg-rosado border-0 py-2 px-6 focus:outline-none hover:text-rosado rounded text-lg">Da el primer paso</button>
+            <button onClick={() => setIsLoginOpen(true)} className="buttonHero inline-flex text-white bg-rosado border-0 py-2 px-6 focus:outline-none hover:text-rosado rounded text-lg">Da el primer paso</button>
           </div>
         </div>
 
@@ -21,6 +27,8 @@ export default function HeroHome() {
           <img className="object-cover object-center rounded" alt="hero" src={CalendarImage} />
         </div>
       </div>
+
+      <LoginModal isOpen={isLoginOpen} closeModal={() => setIsLoginOpen(false)} />
     </section>
   );
 }
