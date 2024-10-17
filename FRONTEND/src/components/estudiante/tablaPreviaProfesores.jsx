@@ -59,7 +59,7 @@ export default function TabPrevProfesores() {
   }, []);
 
   return (
-  <Table aria-label="Example table with custom cells">
+  <Table aria-label="Example table with custom cells" className="w-full">
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
