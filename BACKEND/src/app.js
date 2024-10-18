@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import auth from "./routes/auth.js";
 import disponibilidad from "./routes/disponibilidad.js";
 import cita from "./routes/cita.js";
@@ -6,6 +7,11 @@ import ticket from "./routes/ticket.js";
 import 'dotenv/config';
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173', // Permitir el acceso desde tu frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
+}));
 
 
 app.use(express.json());

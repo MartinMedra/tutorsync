@@ -2,10 +2,12 @@ import {useState} from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button} from "@nextui-org/react";
 import {Link as LinkScroll } from "react-scroll";
 import LoginModal from "./loginModal";
+import RegisterModal from "./registerModal";
 
 export default function NavbarHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
   const menuItems = [
     "Profile",
@@ -53,7 +55,7 @@ export default function NavbarHome() {
           <Link onClick={() => setIsLoginOpen(true)} className="text-gray-300 font-bold hover:text-rosado">Iniciar Sesión</Link>
         </NavbarItem>
         <NavbarItem>
-          <button className="botonRegistro">Registrate</button>
+          <button onClick={() => setIsRegisterOpen(true)} className="botonRegistro">Registrate</button>
         </NavbarItem>
       </NavbarContent>
       <NavbarMenu>
@@ -75,6 +77,7 @@ export default function NavbarHome() {
     </Navbar>
 
 <LoginModal isOpen={isLoginOpen} closeModal={() => setIsLoginOpen(false)} />
+<RegisterModal isOpen={isRegisterOpen} closeModal={() => setIsRegisterOpen(false)} />
 
 </>
   );
