@@ -2,6 +2,9 @@
   "name": "tutorsync",
   "version": "1.0.0",
   "main": "BACKEND/src/app.js",
+    "prisma": {
+      "schema": "C:\\Users\\innovacion\\Documents\\Mio\\tutorsync\\BACKEND\\prisma\\schema.prisma"
+    },
   "scripts": {
     "dev": "nodemon BACKEND/src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
