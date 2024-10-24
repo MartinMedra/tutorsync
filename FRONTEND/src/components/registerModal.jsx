@@ -47,19 +47,19 @@ const RegisterModal = ({ isOpen, closeModal }) => {
         <Modal isOpen={isOpen} closeModal={closeModal}>
             <div className="containerLogin">
                 <div className="heading">Registrate</div>
-                <form action="" className="form" onSubmit={handleRegister}>
-                <input required="" value={name} onChange={(e)=> setName(e.target.value)} className="input" type="name" name="name" id="name" placeholder="Nombre" />
-                <select required="" value={role} onChange={(e)=> setRole(e.target.value)} className="input" type="role" id="role" placeholder="Que rol cumples">
+                <form action className="form" onSubmit={handleRegister}>
+                <input required value={name} onChange={(e)=> setName(e.target.value)} className="input" type="name" name="name" id="name" placeholder="Nombre" />
+                <select required value={role} onChange={(e)=> setRole(e.target.value)} className="input" type="role" id="role" placeholder="Que rol cumples">
                         <option value=" ">Selecciona tu rol</option>
-                        <option value="student">Estudiante</option>
-                        <option value="tutor">Tutor</option>
+                        <option value="Estudiante">Estudiante</option>
+                        <option value="Tutor">Tutor</option>
                 </select>
-                    <input required="" value={email} onChange={(e)=> setEmail(e.target.value)} className="input" type="email" name="email" id="email" placeholder="Correo Electrónico" />
-                    <input required="" value={password} onChange={(e)=> setPassword(e.target.value)} className="input" type="password" name="password" id="password" placeholder="Contraseña" />
-                    <input required="" value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} className="input" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirmar Contraseña" />
+                    <input required value={email} onChange={(e)=> setEmail(e.target.value)} className="input" type="email" name="email" id="email" placeholder="Correo Electrónico" />
+                    <input required value={password} onChange={(e)=> setPassword(e.target.value)} className="input" type="password" name="password" id="password" placeholder="Contraseña" />
+                    <input required value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} className="input" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirmar Contraseña" />
                     <input className="login-button" type="submit" value="Registrarse" />
                 </form>
-                <span className="agreement"><a href="#">Learn user licence agreement</a></span>
+                <span className="agreement"><a>Learn user licence agreement</a></span>
             </div> 
         </Modal>
         <LoginModal isOpen={isLoginOpen} closeModal={() => setIsLoginOpen(false)} />

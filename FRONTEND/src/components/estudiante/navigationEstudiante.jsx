@@ -1,6 +1,41 @@
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar} from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function PrincipalEstudiante() {
+
+  const [user, setUser] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('No estás autenticado.');
+        return;
+      }
+      try {
+        const response = await axios.get('http://localhost:3000/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setUser(response.data);
+        // console.log(response.data);
+      } catch (error) {
+        setError('Error al cargar el perfil.');
+      }
+    };
+  
+    fetchProfile();
+  }, []);
+
+  const navigate = useNavigate();
+
+  const handlelogout = () =>{
+    localStorage.removeItem('token');
+    navigate('/');
+}
+
   return (
     <Navbar>
       <NavbarBrand>
@@ -40,17 +75,12 @@ export default function PrincipalEstudiante() {
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">zoey@example.com</p>
+              <p className="font-semibold">{user.role}</p>
+              <p className="font-semibold">{user.name}</p>
             </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger">
-              Log Out
+            <DropdownItem key="settings">Perfil</DropdownItem>
+            <DropdownItem onClick={handlelogout} key="logout" color="danger">
+              Cerrar Sesión
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

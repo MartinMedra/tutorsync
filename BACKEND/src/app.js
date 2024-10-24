@@ -4,6 +4,7 @@ import auth from "./routes/auth.js";
 import disponibilidad from "./routes/disponibilidad.js";
 import cita from "./routes/cita.js";
 import ticket from "./routes/ticket.js";
+import user from "./routes/user.js";
 import 'dotenv/config';
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/", auth);
 app.use("/", disponibilidad);
 app.use("/", cita);
 app.use("/", ticket);
+app.use("/", user);
 
 app.listen(3000);
 console.log("Server on port", 3000);

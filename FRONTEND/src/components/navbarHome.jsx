@@ -8,6 +8,7 @@ export default function NavbarHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  
 
   const menuItems = [
     "Profile",

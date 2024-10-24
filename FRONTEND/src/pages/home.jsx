@@ -6,11 +6,13 @@ import Explaint from "../components/explaint";
 
 export default function LandingPage() {
     return(
-    <>
+    <>    
+    <section className="home">
     <NavbarHome />
     <HeroHome />
     <Explaint/>
     <AboutUs />
     <Politics />
+    </section>
     </>
 )}

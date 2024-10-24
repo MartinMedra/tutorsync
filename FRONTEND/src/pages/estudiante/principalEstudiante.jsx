@@ -1,6 +1,8 @@
 import NavigationEstudiante from "../../components/estudiante/navigationEstudiante";
 import TabPrevProfesores from "../../components/estudiante/tablaPreviaProfesores";
 import ListaPreviaCita from "../../components/estudiante/listaPreviaCita";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Modal,
   ModalContent,
@@ -11,8 +13,47 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
+axios.get
+
 export default function PrincipalEstudiante() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [tutores, setTutores] = useState([]);
+  const [selectedTutor, setSelectedTutor] = useState([]);
+  const [disponibilidades, setDisponibilidades] = useState([]);
+  const [modalidad, setModalidad] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    const fetchTutores = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/profesores');
+        setTutores(response.data);
+      } catch (error) {
+        console.error('Error al obtener los profesores:', error);
+        setError('Error al obtener los profesores');
+      }
+    };
+
+    fetchTutores();
+
+  }, []);
+
+  const handleTutorChange = async (event) => {
+    const profesorId = event.target.value;
+    setSelectedTutor(profesorId);
+
+    if (profesorId) {
+      try {
+        const response = await axios.get(`http://localhost:3000/profesor/disponibilidad/${profesorId}`);
+        setDisponibilidades(response.data);
+      } catch (error) {
+        console.error('Error al obtener disponibilidad:', error);
+      }
+    } else {
+      setDisponibilidades([]);
+    }
+  };
 
   return (
     <>
@@ -37,14 +78,22 @@ export default function PrincipalEstudiante() {
                     </ModalHeader>
                     <ModalBody className="gap-0">
                     <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Docente</label>
-                        <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Selecciona el Docente</option>
-                            <option value="TV">TV/Monitors</option>
-                    </select>
+                    <select onChange={handleTutorChange} value={selectedTutor} id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option selected="">Selecciona el Docente</option>
+                        {tutores.map((profesor) => (
+                          <option key={profesor.id} value={profesor.id}>
+                            {profesor.name}
+                          </option>
+                        ))}
+                      </select>
                     <label htmlFor="category" className="mt-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Disponibilidad</label>
                         <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option selected="">Selecciona disponibilidad</option>
-                            <option value="TV">TV/Monitors</option>
+                            {disponibilidades.map((disponibilidad)=>(
+                                <option key={disponibilidad.id} value={disponibilidad.id}>
+                                  Fecha:{disponibilidad.date} Hora de inicio:{disponibilidad.startTime} - {disponibilidad.endTime}
+                                </option>
+                            ))}
                     </select>
                     <label htmlFor="category" className="mt-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modalidad</label>
                         <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
