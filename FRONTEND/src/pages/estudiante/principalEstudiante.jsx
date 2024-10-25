@@ -27,7 +27,7 @@ export default function PrincipalEstudiante() {
   useEffect(() => {
     const fetchTutores = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/profesores');
+        const response = await axios.get('http://localhost:3000/tutores');
         setTutores(response.data);
       } catch (error) {
         console.error('Error al obtener los profesores:', error);
@@ -59,6 +59,12 @@ export default function PrincipalEstudiante() {
     <>
       <NavigationEstudiante />
       <div className="lg:mx-10 mx-3 my-3 flex flex-col gap-3 justify-center items-center ">
+        <section className="ProfDisponibles">
+          <div>
+            <h1 className="text-xl font-bold">Profesores disponibles</h1>
+            <TabPrevProfesores />
+          </div>
+        </section>
         <section className="Botones">
           <div className="flex gap-3 justify-center items-center">
             <Button onPress={onOpen} className="bg-rosado hover:bg-rosado-claro text-white font-bold py-2 px-4 rounded">
@@ -77,8 +83,8 @@ export default function PrincipalEstudiante() {
                       Solicitar tutoría
                     </ModalHeader>
                     <ModalBody className="gap-0">
-                    <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Docente</label>
-                    <select onChange={handleTutorChange} value={selectedTutor} id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                      <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Docente</label>
+                      <select onChange={handleTutorChange} value={selectedTutor} id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         <option selected="">Selecciona el Docente</option>
                         {tutores.map((profesor) => (
                           <option key={profesor.id} value={profesor.id}>
@@ -86,21 +92,25 @@ export default function PrincipalEstudiante() {
                           </option>
                         ))}
                       </select>
-                    <label htmlFor="category" className="mt-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Disponibilidad</label>
-                        <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Selecciona disponibilidad</option>
-                            {disponibilidades.map((disponibilidad)=>(
-                                <option key={disponibilidad.id} value={disponibilidad.id}>
-                                  Fecha:{disponibilidad.date} Hora de inicio:{disponibilidad.startTime} - {disponibilidad.endTime}
-                                </option>
-                            ))}
-                    </select>
-                    <label htmlFor="category" className="mt-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modalidad</label>
-                        <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Selecciona Modalidad</option>
-                            <option value="Presencial">Presencial</option>
-                            <option value="Virtual">Virtual</option>
-                    </select>
+                      <label htmlFor="category" className="mt-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Disponibilidad</label>
+                      <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option selected="">Selecciona disponibilidad</option>
+                        {disponibilidades.length === 0 ? (
+                          <option disabled>Actualmente el tutor no tiene disponibilidades</option>
+                        ) : (
+                          disponibilidades.map((disponibilidad) => (
+                            <option key={disponibilidad.id} value={disponibilidad.id}>
+                              Fecha: {new Date(disponibilidad.date).toLocaleDateString()} Hora de inicio: {new Date(disponibilidad.startTime).toLocaleTimeString()} - {new Date(disponibilidad.endTime).toLocaleTimeString()}
+                            </option>
+                          ))
+                        )}
+                      </select>
+                      <label htmlFor="category" className="mt-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modalidad</label>
+                      <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option selected="">Selecciona Modalidad</option>
+                        <option value="Presencial">Presencial</option>
+                        <option value="Virtual">Virtual</option>
+                      </select>
                     </ModalBody>
                     <ModalFooter>
                       <Button color="danger" variant="flat" onPress={onClose}>
@@ -119,7 +129,6 @@ export default function PrincipalEstudiante() {
             </button>
           </div>
         </section>
-        <hr className="w-full border-gray-300"></hr>
         <section className="ProxTutorias">
           <h1 className="text-2xl font-bold text-center">Próximas Tutorías</h1>
           <div className="flex gap-3 justify-center items-center">
@@ -144,12 +153,6 @@ export default function PrincipalEstudiante() {
           <div>
             <h1 className="text-xl font-bold">Ultimas citas</h1>
             <ListaPreviaCita />
-          </div>
-        </section>
-        <section className="ProfDisponibles">
-          <div>
-            <h1 className="text-xl font-bold">Profesores disponibles</h1>
-            <TabPrevProfesores />
           </div>
         </section>
       </div>

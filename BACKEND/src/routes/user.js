@@ -9,7 +9,7 @@ const prisma = new PrismaClient(); // Instancia de PrismaClient
 
 //----------------------------------- Consultar profesores registrados -----------------------------------
 
-router.get("/profesores", async (req, res) => {
+router.get("/tutores", async (req, res) => {
     try {
       // Consultar todos los usuarios con el rol de "professor"
       const profesores = await prisma.user.findMany({

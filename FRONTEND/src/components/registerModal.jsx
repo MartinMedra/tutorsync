@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Modal from './modal';
 import propTypes from 'prop-types';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import LoginModal from "./loginModal";
 import axios from 'axios';
 
@@ -26,7 +26,7 @@ const RegisterModal = ({ isOpen, closeModal }) => {
         }
 
         try {
-            const response = await axios.post('http://localhost:3000/register' ,{email, password, name, role, identification});
+            const response = await axios.post('http://localhost:3000/register', { email, password, name, role, identification });
             setSuccess("Usuario registrado correctamente");
             setError('');
             setTimeout(() => {
@@ -43,9 +43,43 @@ const RegisterModal = ({ isOpen, closeModal }) => {
     };
 
     return (
-    <>
-        <Modal isOpen={isOpen} closeModal={closeModal}>
-            <div className="containerLogin">
+        <>
+            <Modal isOpen={isOpen} closeModal={closeModal}>
+                <div className="form_area">
+                    <p className="title">REGISTRATE</p>
+                    <form onSubmit={handleRegister}>
+                        <div className="form_group">
+                            <label className="sub_title" htmlFor="Name">Nombre</label>
+                            <input placeholder="Nombre Completo" className="form_style" required value={name} onChange={(e)=> setName(e.target.value)}  type="name" name="name" id="name" />
+                        </div>
+                        <div className="form_group">
+                            <label className="sub_title" htmlFor="role">Rol</label>
+                            <select required value={role} onChange={(e) => setRole(e.target.value)} className="form_style" type="role" id="role" placeholder="¿Que rol cumples?">
+                                <option value=" ">Selecciona tu rol</option>
+                                <option value="Estudiante">Estudiante</option>
+                                <option value="Tutor">Tutor</option>
+                            </select>
+                        </div>
+                        <div className="form_group">
+                            <label className="sub_title" htmlFor="email">Correo Electrónico</label>
+                            <input placeholder="Ingresa tu correo" className="form_style" required value={email} onChange={(e)=> setEmail(e.target.value)} type="email" name="email" id="email"/>
+                        </div>
+                        <div className="form_group">
+                            <label className="sub_title" htmlFor="password">Contraseña</label>
+                            <input placeholder="Ingresa tu contraseña" className="form_style" required value={password} onChange={(e)=> setPassword(e.target.value)} type="password" name="password" id="password"/>
+                        </div>
+                        <div className="form_group">
+                            <label className="sub_title" htmlFor="ConfirmPassword">Confirma tu contraseña</label>
+                            <input placeholder="Ingresa tu contraseña de nuevo" className="form_style" required value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} type="password" name="confirmPassword" id="confirmPassword"/>
+                        </div>
+                        <div>
+                            <button type="submit" className="buttonHero w-full my-5 m-0 bg-rosado hover:text-rosado hover:border-rosado">Entrar</button>
+                            <p>¿No tienes cuenta? <a className="cursor-pointer text-black font-semibold hover:text-rosado transform transition-all" onClick={() => { closeModal(); setIsRegisterOpen(true); }}>Registrate aquí!</a></p><a className="link" href="">
+                            </a>
+                        </div>
+                    </form>
+                </div>
+                {/* <div className="containerLogin">
                 <div className="heading">Registrate</div>
                 <form action className="form" onSubmit={handleRegister}>
                 <input required value={name} onChange={(e)=> setName(e.target.value)} className="input" type="name" name="name" id="name" placeholder="Nombre" />
@@ -60,10 +94,10 @@ const RegisterModal = ({ isOpen, closeModal }) => {
                     <input className="login-button" type="submit" value="Registrarse" />
                 </form>
                 <span className="agreement"><a>Learn user licence agreement</a></span>
-            </div> 
-        </Modal>
-        <LoginModal isOpen={isLoginOpen} closeModal={() => setIsLoginOpen(false)} />
-    </>
+            </div>  */}
+            </Modal>
+            {/* <LoginModal isOpen={isLoginOpen} closeModal={() => setIsLoginOpen(false)} /> */}
+        </>
     );
 };
 

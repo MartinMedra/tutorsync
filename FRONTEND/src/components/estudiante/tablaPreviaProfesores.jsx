@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, getKeyValue} from "@nextui-org/react";
+import { useState } from "react";
+import axios from "axios";
+
 
 
 const statusColorMap = {
@@ -9,6 +12,23 @@ const statusColorMap = {
 };
 
 export default function TabPrevProfesores() {
+  const [tutores, setTutores] = useState([]);
+  const [error, setError] = useState([]);
+
+  useEffect(() => {
+    const fetchTutores = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/tutores');
+        setTutores(response.data);
+      }catch{
+        console.error('Error al obtener los profesores:', error);
+        setError('Error al obtener los profesores');
+      }
+    };
+
+    fetchTutores();
+  }, );
+
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
 
@@ -67,7 +87,7 @@ export default function TabPrevProfesores() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody items={users}>
+      <TableBody items={tutores}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
@@ -85,56 +105,56 @@ const columns = [
   {name: "ACTIONS", uid: "actions"},
 ];
 
-const users = [
-  {
-    id: 1,
-    name: "Tony Reichert",
-    role: "CEO",
-    team: "Management",
-    status: "active",
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "tony.reichert@example.com",
-  },
-  {
-    id: 2,
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    team: "Development",
-    status: "paused",
-    age: "25",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-    email: "zoey.lang@example.com",
-  },
-  {
-    id: 3,
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    team: "Development",
-    status: "active",
-    age: "22",
-    avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-    email: "jane.fisher@example.com",
-  },
-  {
-    id: 4,
-    name: "William Howard",
-    role: "Community Manager",
-    team: "Marketing",
-    status: "vacation",
-    age: "28",
-    avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-    email: "william.howard@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-    status: "active",
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-];
+// const users = [
+//   {
+//     id: 1,
+//     name: "Tony Reichert",
+//     role: "CEO",
+//     team: "Management",
+//     status: "active",
+//     age: "29",
+//     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+//     email: "tony.reichert@example.com",
+//   },
+//   {
+//     id: 2,
+//     name: "Zoey Lang",
+//     role: "Technical Lead",
+//     team: "Development",
+//     status: "paused",
+//     age: "25",
+//     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
+//     email: "zoey.lang@example.com",
+//   },
+//   {
+//     id: 3,
+//     name: "Jane Fisher",
+//     role: "Senior Developer",
+//     team: "Development",
+//     status: "active",
+//     age: "22",
+//     avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+//     email: "jane.fisher@example.com",
+//   },
+//   {
+//     id: 4,
+//     name: "William Howard",
+//     role: "Community Manager",
+//     team: "Marketing",
+//     status: "vacation",
+//     age: "28",
+//     avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
+//     email: "william.howard@example.com",
+//   },
+//   {
+//     id: 5,
+//     name: "Kristen Copper",
+//     role: "Sales Manager",
+//     team: "Sales",
+//     status: "active",
+//     age: "24",
+//     avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
+//     email: "kristen.cooper@example.com",
+//   },
+// ];
 

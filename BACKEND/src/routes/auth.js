@@ -9,6 +9,14 @@ const prisma = new PrismaClient();
 router.post("/register", async (req, res) => {
   const { email, password, role, identification, name } = req.body;
   try {
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(409).json({ error: "El correo ya está en uso" });
+    }
+    
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
       data: { email, password: hashedPassword, role, identification, name },
