@@ -18,8 +18,10 @@ axios.get
 export default function PrincipalEstudiante() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tutores, setTutores] = useState([]);
+  const [userId, setUserId] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState([]);
   const [disponibilidades, setDisponibilidades] = useState([]);
+  const [selectedDisponibilidad, setSelectedDisponibilidad] = useState([]);
   const [modalidad, setModalidad] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -52,6 +54,53 @@ export default function PrincipalEstudiante() {
       }
     } else {
       setDisponibilidades([]);
+    }
+  };
+
+  const handleDisponibilidadChange = (event) => {
+    setSelectedDisponibilidad(event.target.value);
+  };
+
+  const handleModalidadChange = (event) => {
+    setModalidad(event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    
+      const fetchProfile = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setError('No estás autenticado.');
+          return;
+        }
+        try {
+          const response = await axios.get('http://localhost:3000/profile', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const { id } = response.data; // Desestructurar para obtener solo el id
+          setUserId(id); // Guardar el id en el estado
+        } catch (error) {
+          setError('Error al cargar el perfil.');
+        }
+      };
+  
+      await fetchProfile();
+ [];
+
+    const studentId = userId; // Reemplaza con el ID del estudiante actual
+
+    try {
+      const response = await axios.post('http://localhost:3000/citas', {
+        studentId,
+        disponibilidadId: selectedDisponibilidad,
+        mode: modalidad,
+      });
+      setSuccess('Cita creada correctamente');
+      setError('');
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error al crear la cita:', error);
+      setError('Error al crear la cita');
     }
   };
 
@@ -93,7 +142,7 @@ export default function PrincipalEstudiante() {
                         ))}
                       </select>
                       <label htmlFor="category" className="mt-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Disponibilidad</label>
-                      <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                      <select id="category" onChange={handleDisponibilidadChange} value={selectedDisponibilidad} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         <option selected="">Selecciona disponibilidad</option>
                         {disponibilidades.length === 0 ? (
                           <option disabled>Actualmente el tutor no tiene disponibilidades</option>
@@ -105,8 +154,8 @@ export default function PrincipalEstudiante() {
                           ))
                         )}
                       </select>
-                      <label htmlFor="category" className="mt-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modalidad</label>
-                      <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                      <label htmlFor="modalidad" className="mt-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modalidad</label>
+                      <select onChange={handleModalidadChange} value={modalidad} id="modalidad" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         <option selected="">Selecciona Modalidad</option>
                         <option value="Presencial">Presencial</option>
                         <option value="Virtual">Virtual</option>
@@ -116,7 +165,7 @@ export default function PrincipalEstudiante() {
                       <Button color="danger" variant="flat" onPress={onClose}>
                         Cerrar
                       </Button>
-                      <Button color="primary" onPress={onClose}>
+                      <Button color="primary" onPress={() => { handleSubmit(); onClose(); }}>
                         Apartar Cita
                       </Button>
                     </ModalFooter>
