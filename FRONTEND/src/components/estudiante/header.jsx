@@ -1,5 +1,3 @@
-
-
 function Header() {
   return (
     <header className="bg-white shadow p-4 flex justify-between items-center">

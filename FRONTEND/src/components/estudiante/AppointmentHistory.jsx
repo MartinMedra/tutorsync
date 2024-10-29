@@ -1,23 +1,19 @@
 
-
 function AppointmentHistory() {
   return (
-    <section className="bg-white p-4 shadow rounded-lg">
-      <h2 className="text-lg font-semibold mb-2">Historial de Citas</h2>
-      <ul className="space-y-2">
-        <li className="border-b pb-2">
-          <p className="text-gray-600">Profesor: Ana López</p>
-          <p className="text-gray-600">Fecha: 15 Octubre 2024</p>
-          <button className="text-blue-500">Ver detalles</button>
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-lg font-semibold mb-4 text-gray-700">Historial de Citas</h2>
+      <ul className="space-y-4">
+        <li className="border-b pb-2 flex justify-between items-center">
+          <div>
+            <p className="text-gray-700 font-medium">Profesor: Ana López</p>
+            <p className="text-gray-500">Fecha: 20 Octubre 2024</p>
+          </div>
+          <button className="text-blue-500 hover:text-blue-700">Ver detalles</button>
         </li>
-        <li className="border-b pb-2">
-          <p className="text-gray-600">Profesor: Carlos Ruiz</p>
-          <p className="text-gray-600">Fecha: 5 Octubre 2024</p>
-          <button className="text-blue-500">Ver detalles</button>
-        </li>
-        {/* Agregar más citas según sea necesario */}
+        {/* Más citas en el historial... */}
       </ul>
-    </section>
+    </div>
   );
 }
 
