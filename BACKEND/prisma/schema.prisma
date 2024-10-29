@@ -14,6 +14,7 @@ model User {
   password      String
   role          String    // "professor" or "student"
   identification String
+  subjet        String    @default(" ")// Materia que imparte el profesor
   studentAppointments Citas[] @relation("StudentCitas")
   professorAppointments Citas[] @relation("ProfessorCitas")
   Disponibilidad Disponibilidad[]  // Disponibilidad del profesor

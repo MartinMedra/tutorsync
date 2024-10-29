@@ -7,7 +7,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post("/register", async (req, res) => {
-  const { email, password, role, identification, name } = req.body;
+  const { email, password, role, identification, name, subject } = req.body;
   try {
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -15,6 +15,11 @@ router.post("/register", async (req, res) => {
 
     if (existingUser) {
       return res.status(409).json({ error: "El correo ya está en uso" });
+    }
+
+    // Validar que el campo subject esté presente si el rol es Tutor
+    if (role === "Tutor" && (!subject || subject.trim() === "")) {
+      return res.status(400).json({ error: "El campo 'subject' es obligatorio para los tutores" });
     }
     
     const hashedPassword = await bcrypt.hash(password, 10);

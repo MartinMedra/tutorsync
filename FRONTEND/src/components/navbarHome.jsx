@@ -52,10 +52,10 @@ export default function NavbarHome() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex cursor-pointer">
+        <NavbarItem className="cursor-pointer">
           <Link onClick={() => setIsLoginOpen(true)} className="text-gray-300 font-bold hover:text-rosado">Iniciar Sesión</Link>
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem className="hidden lg:flex">
           <button onClick={() => setIsRegisterOpen(true)} className="botonRegistro">Registrate</button>
         </NavbarItem>
       </NavbarContent>

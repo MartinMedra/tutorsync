@@ -1,39 +1,91 @@
-import propTypes from 'prop-types';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import axios from 'axios';
-export const DispoContext = createContext();
+import propTypes from 'prop-types';
 
-export const DispoProvider = ({ children }) => {
-    const [disponibilidad, setDisponibilidad] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+// Crear el contexto
+export const DisponibilidadContext = createContext();
 
-    useEffect(() => {
-        const fetchDisponibilidad = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get('http://localhost:3000/disponibilidad');
-                setDisponibilidad(response.data);
-            } catch (error) {
-                console.error('Error al obtener la disponibilidad:', error);
-                setError('Error al obtener la disponibilidad');
-            } finally {
-                setLoading(false);
-            }
-        };
+// Proveedor del contexto
+export const DisponibilidadProvider = ({ children }) => {
+  const [disponibilidad, setDisponibilidad] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-        fetchDisponibilidad();
-    }, []);
-    
-    return (
-        <DispoContext.Provider value={{ disponibilidad, setDisponibilidad, loading, error, setError }}>
-            {children}
-        </DispoContext.Provider>
-    );
-}
+  // Función para obtener la disponibilidad de un profesor
+  const fetchDisponibilidad = async (professorId) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:3000/profesor/disponibilidad/${professorId}`);
+      setDisponibilidad(response.data);
+    } catch (error) {
+      setError('Error al obtener disponibilidad');
+      console.error('Error al obtener disponibilidad:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-DispoProvider.propTypes = {
-    children: propTypes.node.isRequired,
+  // Función para crear una nueva disponibilidad
+  const createDisponibilidad = async (data) => {
+    setLoading(true);
+    try {
+      const response = await axios.post('http://localhost:3000/profesor/disponibilidad', data);
+      setDisponibilidad((prev) => [...prev, response.data]);
+    } catch (error) {
+      setError('Error al crear disponibilidad');
+      console.error('Error al crear disponibilidad:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para actualizar una disponibilidad existente
+  const updateDisponibilidad = async (id, data) => {
+    setLoading(true);
+    try {
+      const response = await axios.put(`http://localhost:3000/profesor/disponibilidad/${id}`, data);
+      setDisponibilidad((prev) =>
+        prev.map((item) => (item.id === id ? response.data : item))
+      );
+    } catch (error) {
+      setError('Error al actualizar disponibilidad');
+      console.error('Error al actualizar disponibilidad:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para eliminar una disponibilidad
+  const deleteDisponibilidad = async (id) => {
+    setLoading(true);
+    try {
+      await axios.delete(`http://localhost:3000/profesor/disponibilidad/${id}`);
+      setDisponibilidad((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      setError('Error al eliminar disponibilidad');
+      console.error('Error al eliminar disponibilidad:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <DisponibilidadContext.Provider
+      value={{
+        disponibilidad,
+        loading,
+        error,
+        fetchDisponibilidad,
+        createDisponibilidad,
+        updateDisponibilidad,
+        deleteDisponibilidad,
+      }}
+    >
+      {children}
+    </DisponibilidadContext.Provider>
+  );
 };
 
-export default DispoContext;
+DisponibilidadProvider.propTypes = {
+  children: propTypes.node.isRequired,
+};

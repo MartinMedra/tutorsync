@@ -12,6 +12,7 @@ const RegisterModal = ({ isOpen, closeModal }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [role, setRole] = useState('');
+    const [subject, setSubject] = useState('');
     const [identification, setIdentification] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -26,7 +27,7 @@ const RegisterModal = ({ isOpen, closeModal }) => {
         }
 
         try {
-            const response = await axios.post('http://localhost:3000/register', { email, password, name, role, identification });
+            const response = await axios.post('http://localhost:3000/register', { email, password, name, role, identification, subject });
             setSuccess("Usuario registrado correctamente");
             setError('');
             setTimeout(() => {
@@ -50,7 +51,7 @@ const RegisterModal = ({ isOpen, closeModal }) => {
                     <form onSubmit={handleRegister}>
                         <div className="form_group">
                             <label className="sub_title" htmlFor="Name">Nombre</label>
-                            <input placeholder="Nombre Completo" className="form_style" required value={name} onChange={(e)=> setName(e.target.value)}  type="name" name="name" id="name" />
+                            <input placeholder="Nombre Completo" className="form_style" required value={name} onChange={(e) => setName(e.target.value)} type="name" name="name" id="name" />
                         </div>
                         <div className="form_group">
                             <label className="sub_title" htmlFor="role">Rol</label>
@@ -60,17 +61,45 @@ const RegisterModal = ({ isOpen, closeModal }) => {
                                 <option value="Tutor">Tutor</option>
                             </select>
                         </div>
+                        {role === "Tutor" && (
+                            <div className="form_group">
+                                <label className="sub_title" htmlFor="subject">Materia</label>
+                                <select required value={subject} onChange={(e) => setSubject(e.target.value)} className="form_style" id="subject" placeholder="Selecciona la materia que impartes">
+                                    <option value="">Selecciona una materia</option>
+                                    <option value="Arte">Arte</option>
+                                    <option value="Biología">Biología</option>
+                                    <option value="Ciencias Naturales">Ciencias Naturales</option>
+                                    <option value="Ciencias Sociales">Ciencias Sociales</option>
+                                    <option value="Comunicación Oral y Escrita">Comunicación Oral y Escrita</option>
+                                    <option value="Educación Cívica">Educación Cívica</option>
+                                    <option value="Ética y Valores">Ética y Valores</option>
+                                    <option value="Emprendimiento o Economía">Emprendimiento o Economía</option>
+                                    <option value="Filosofía">Filosofía</option>
+                                    <option value="Física">Física</option>
+                                    <option value="Geografía">Geografía</option>
+                                    <option value="Historia">Historia</option>
+                                    <option value="Inglés">Inglés</option>
+                                    <option value="Lengua y Literatura">Lengua y Literatura</option>
+                                    <option value="Matemáticas">Matemáticas</option>
+                                    <option value="Música">Música</option>
+                                    <option value="Química">Química</option>
+                                    <option value="Religión">Religión</option>
+                                    <option value="Tecnología">Tecnología</option>
+                                </select>
+                            </div>
+                        )}
+
                         <div className="form_group">
                             <label className="sub_title" htmlFor="email">Correo Electrónico</label>
-                            <input placeholder="Ingresa tu correo" className="form_style" required value={email} onChange={(e)=> setEmail(e.target.value)} type="email" name="email" id="email"/>
+                            <input placeholder="Ingresa tu correo" className="form_style" required value={email} onChange={(e) => setEmail(e.target.value)} type="email" name="email" id="email" />
                         </div>
                         <div className="form_group">
                             <label className="sub_title" htmlFor="password">Contraseña</label>
-                            <input placeholder="Ingresa tu contraseña" className="form_style" required value={password} onChange={(e)=> setPassword(e.target.value)} type="password" name="password" id="password"/>
+                            <input placeholder="Ingresa tu contraseña" className="form_style" required value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" />
                         </div>
                         <div className="form_group">
                             <label className="sub_title" htmlFor="ConfirmPassword">Confirma tu contraseña</label>
-                            <input placeholder="Ingresa tu contraseña de nuevo" className="form_style" required value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} type="password" name="confirmPassword" id="confirmPassword"/>
+                            <input placeholder="Ingresa tu contraseña de nuevo" className="form_style" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} type="password" name="confirmPassword" id="confirmPassword" />
                         </div>
                         <div>
                             <button type="submit" className="buttonHero w-full my-5 m-0 bg-rosado hover:text-rosado hover:border-rosado">Entrar</button>
