@@ -4,6 +4,7 @@ import AvailabilityManagement from "../tutor/AvailabilityManagement";
 import AppointmentHistory from "../tutor/AppointmentHistory";
 import QuickAccess from "../tutor/QuickAccess";
 
+
 function MainContent() {
   return (
     <main className="p-6 space-y-6">
