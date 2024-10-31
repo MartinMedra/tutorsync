@@ -1,4 +1,4 @@
-import CalendarImage from '../assets/Calendar.png';
+import HeroImage from '../../../assets/svg/Calendar.png';
 import LoginModal from './loginModal';
 import { useState } from 'react';
 
@@ -24,7 +24,7 @@ export default function HeroHome() {
 
         {/* Imagen a la izquierda */}
         <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0">
-          <img className="object-cover object-center rounded" alt="hero" src={CalendarImage} />
+          <img className="object-cover object-center rounded" alt="hero" src={HeroImage} />
         </div>
       </div>
 

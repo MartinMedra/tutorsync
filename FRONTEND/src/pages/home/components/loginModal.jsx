@@ -1,9 +1,9 @@
 // LoginModal.js
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Modal from './modal';
+import Modal from '../../../components/modal.jsx';
 import propTypes from 'prop-types';
-import { AuthContext } from '../context/AuthContext/AuthContext.jsx';
+import { AuthContext } from '../../../context/AuthContext/AuthContext.jsx';
 import RegisterModal from './registerModal';
 
 const LoginModal = ({ isOpen, closeModal }) => {

@@ -1,4 +1,4 @@
-import AccordionHome from "./accordion";
+import AccordionHome from "../../../components/accordion";
 
 export default function Politics() {
     return (

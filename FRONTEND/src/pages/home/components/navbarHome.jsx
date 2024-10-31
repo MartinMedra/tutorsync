@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button} from "@nextui-org/react";
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link} from "@nextui-org/react";
 import {Link as LinkScroll } from "react-scroll";
 import LoginModal from "./loginModal";
 import RegisterModal from "./registerModal";

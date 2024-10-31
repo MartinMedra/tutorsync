@@ -1,7 +1,7 @@
 
-import Sidebar from "../../components/tutor/Sidebar";
-import Header from "../../components/tutor/HeaderTutor";
-import MainContent from "../../components/tutor/MainContent";
+import Sidebar from "../components/Sidebar";
+import Header from "../components/HeaderTutor";
+import MainContent from "../components/MainContent";
 
 function TutorHome() {
   return (

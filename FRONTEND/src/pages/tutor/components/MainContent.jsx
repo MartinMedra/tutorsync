@@ -1,8 +1,8 @@
 
-import RequestedAppointments from "../tutor/RequestedAppointments";
-import AvailabilityManagement from "../tutor/AvailabilityManagement";
-import AppointmentHistory from "../tutor/AppointmentHistory";
-import QuickAccess from "../tutor/QuickAccess";
+import RequestedAppointments from "./RequestedAppointments";
+import AvailabilityManagement from "./AvailabilityManagement";
+import AppointmentHistory from "./AppointmentHistory";
+import QuickAccess from "./QuickAccess";
 
 
 function MainContent() {
