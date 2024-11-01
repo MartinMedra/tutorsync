@@ -1,7 +1,9 @@
 import { useState, useContext } from 'react';
 import Fuse from 'fuse.js';
 import { TutorContext } from '../../../context/TutorContext/TutorContext';
+import { AuthContext } from '../../../context/AuthContext/AuthContext'; // Importa tu contexto de autenticación
 import axios from 'axios';
+
 import {
   Modal,
   ModalContent,
@@ -14,6 +16,7 @@ import {
 
 function TeacherSearch() {
   const { tutors, loading, error } = useContext(TutorContext);
+  const { user } = useContext(AuthContext); // Obtén el usuario autenticado del contexto
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState(null);
@@ -21,6 +24,8 @@ function TeacherSearch() {
   const [selectedDisponibilidad, setSelectedDisponibilidad] = useState(null);
   const [modalidad, setModalidad] = useState('');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [submitError, setSubmitError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const fuse = new Fuse(tutors, {
     keys: ['name'],
@@ -59,15 +64,44 @@ function TeacherSearch() {
     setModalidad(e.target.value);
   };
 
-  const handleCitaConfirm = () => {
-    // Aquí envías la cita a tu backend
-    // Restablecer estado después de la confirmación
-    setSelectedTutor(null);
-    setDisponibilidades([]);
-    setModalidad('');
-    onOpenChange(false); // Cerrar el modal
+  const handleCitaConfirm = async () => {
+    if (!user) {
+      setSubmitError("Usuario no autenticado.");
+      return;
+    }
+
+    const citaData = {
+      studentId: user.id, // Obtén el studentId del contexto
+      disponibilidadId: selectedDisponibilidad,
+      mode: modalidad,
+    };
+
+    try {
+      const response = await axios.post("http://localhost:3000/citas", citaData);
+      setSuccessMessage("¡Cita registrada exitosamente!");
+      console.log("Cita registrada:", response.data);
+      // Restablece el estado
+      setSelectedTutor(null);
+      setDisponibilidades([]);
+      setModalidad('');
+      setSelectedDisponibilidad(null);
+      onOpenChange(false); // Cierra el modal
+    } catch (error) {
+      setSubmitError("Error al registrar la cita.");
+      console.error(error);
+    }
   };
 
+  const formatFecha = (date) => {
+    const options = { day: 'numeric', month: 'long' };
+    return new Intl.DateTimeFormat('es-ES', options).format(new Date(date));
+  };
+  
+  const formatHora = (time) => {
+    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    return new Intl.DateTimeFormat('es-ES', options).format(new Date(time));
+  };
+  
   if (loading) return <p>Cargando tutores...</p>;
   if (error) return <p>{error}</p>;
 
@@ -119,16 +153,15 @@ function TeacherSearch() {
                     <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
                       {disponibilidades.map((disponibilidad) => (
                         <button
-                        key={disponibilidad.id}
-                        onClick={() => handleDisponibilidadSelect(disponibilidad.id)}
-                        className={`px-3 py-2 rounded-full border ${selectedDisponibilidad === disponibilidad.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-300`}
-                      >
-                        {new Date(disponibilidad.date).toLocaleDateString()} - {new Date(disponibilidad.startTime).toLocaleTimeString()} a {new Date(disponibilidad.endTime).toLocaleTimeString()}
-                      </button>
+                          key={disponibilidad.id}
+                          onClick={() => handleDisponibilidadSelect(disponibilidad.id)}
+                          className={`px-3 py-2 rounded-md border ${selectedDisponibilidad === disponibilidad.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-300`}
+                        >
+                          {formatFecha(disponibilidad.date)}  {formatHora(disponibilidad.startTime)} <br /> {formatHora(disponibilidad.endTime)}
+                        </button>
                       ))}
                     </div>
                   )}
-                  {/* Mostrar el select de modalidad solo si hay disponibilidad */}
                   {disponibilidades.length > 0 && (
                     <div className="mt-4">
                       <label htmlFor="modalidad" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modalidad</label>
@@ -144,6 +177,8 @@ function TeacherSearch() {
                       </select>
                     </div>
                   )}
+                  {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
+                  {submitError && <p className="text-red-500 mt-4">{submitError}</p>}
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="flat" onPress={onClose}>
@@ -157,11 +192,9 @@ function TeacherSearch() {
             )}
           </ModalContent>
         </Modal>
-
       )}
     </div>
   );
 }
 
 export default TeacherSearch;
-
