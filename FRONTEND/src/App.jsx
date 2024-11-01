@@ -7,10 +7,10 @@ import { AuthProvider } from './context/AuthContext/AuthContext'
 import ProtectedRoute from './components/common/ProtectedRoute'
 
 function App() {
-
   return (
     <>
     <AuthProvider>
+
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage/>}></Route>

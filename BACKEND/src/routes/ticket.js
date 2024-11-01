@@ -49,4 +49,33 @@ router.post("/tickets", async (req, res) => {
   }
 });
 
+// Obtener todos los tickets de un estudiante por su ID
+router.get("/tickets/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    // Buscar todos los tickets asociados con el studentId
+    const tickets = await prisma.ticket.findMany({
+      where: { studentId: studentId.toString() },
+      include: {
+        citas: {
+          include: {
+            professor: true, // Incluye la información del profesor en la cita
+          },
+        },
+      },
+    });
+
+    if (tickets.length === 0) {
+      return res.status(404).json({ error: "No se encontraron tickets para este estudiante" });
+    }
+
+    // Respuesta con la lista de tickets
+    res.json(tickets);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener los tickets", details: error.message });
+  }
+});
+
+
 export default router;

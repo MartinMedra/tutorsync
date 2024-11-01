@@ -65,6 +65,12 @@ router.post("/citas", async (req, res) => {
   //Confirmar una cita
   router.put("/citas/:id/confirm", async (req, res) => {
     const { id } = req.params;
+    const studentId = req.userId;
+  
+    // Validar el ID para asegurarse de que sea un número
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
   
     try {
       // Confirmar la cita seleccionada
@@ -73,20 +79,37 @@ router.post("/citas", async (req, res) => {
         data: { status: "confirmed" },
       });
   
-      // Cambiar las citas pendientes restantes para la misma disponibilidad a 'rejected'
-      // await prisma.citas.updateMany({
-      //   where: {
-      //     disponibilidadId: citaConfirmada.disponibilidadId,
-      //     status: "pending",
-      //     id: { not: citaConfirmada.id }, // Excluir la cita confirmada
-      //   },
-      //   data: { status: "rejected" },
-      // });
+      // Rechazar citas pendientes para la misma disponibilidad, excluyendo la confirmada
+      await prisma.citas.updateMany({
+        where: {
+          disponibilidadId: citaConfirmada.disponibilidadId,
+          status: "pending",
+          id: { not: citaConfirmada.id }, // Excluir la cita confirmada
+        },
+        data: { status: "rejected" },
+      });
+
+      //! Crear una notificación en la base de datos
+      await prisma.notification.create({
+        data: {
+          studentId: studentId,
+          message: `Tu cita con el profesor ${citaConfirmada.professor.name} ha sido confirmada.`,
+          citaId: citaConfirmada.id,
+        },
+      });
+
+      //! Emitir una notificación al estudiante
+      io.to(`user_${studentId}`).emit('notification', {
+        message: `Tu cita con el profesor ${citaConfirmada.professor.name} ha sido confirmada.`,
+        cita: citaConfirmada,
+      });
   
-      // res.json({ message: "Cita confirmada y otras solicitudes rechazadas", citaConfirmada });
+      // Enviar una respuesta JSON con el resultado
+      res.json({ message: "Cita confirmada y otras solicitudes rechazadas", citaConfirmada });
     } catch (error) {
       res.status(500).json({ error: "Error al confirmar la cita", details: error.message });
     }
   });
+  
 
   export default router;

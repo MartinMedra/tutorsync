@@ -57,3 +57,11 @@ model Ticket {
   createdAt     DateTime   @default(now())
   status        String     // Estado de la cita (esperando, aceptada, rechazada)
 }
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  studentId   String
+  message     String
+  citaId      Int
+  createdAt   DateTime @default(now())
+}

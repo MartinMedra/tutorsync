@@ -2,9 +2,9 @@
   "name": "tutorsync",
   "version": "1.0.0",
   "main": "BACKEND/src/app.js",
-    "prisma": {
-      "schema": "C:\\Users\\innovacion\\Documents\\Mio\\tutorsync\\BACKEND\\prisma\\schema.prisma"
-    },
+  "prisma": {
+    "schema": "C:\\Users\\innovacion\\Documents\\Mio\\tutorsync\\BACKEND\\prisma\\schema.prisma"
+  },
   "scripts": {
     "dev": "nodemon BACKEND/src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,7 +20,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^5.19.1"
+    "prisma": "^5.19.1",
+    "socket.io": "^4.8.1"
   },
   "description": "",
   "devDependencies": {
