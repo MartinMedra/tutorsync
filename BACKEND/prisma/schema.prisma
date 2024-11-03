@@ -18,6 +18,7 @@ model User {
   studentAppointments Citas[] @relation("StudentCitas")
   professorAppointments Citas[] @relation("ProfessorCitas")
   Disponibilidad Disponibilidad[]  // Disponibilidad del profesor
+  notifications  Notification[] @relation("UserNotifications")
 }
 
 model Disponibilidad {
@@ -45,6 +46,7 @@ model Citas {
   mode          String    // "virtual" o "presencial"
   status        String    // "pending", "accepted", "rejected"
   tickets       Ticket[]  // Relación uno a muchos con Ticket
+  notifications        Notification[] @relation("CitaNotifications")
 }
 
 model Ticket {
@@ -60,8 +62,11 @@ model Ticket {
 
 model Notification {
   id          Int      @id @default(autoincrement())
-  studentId   String
+  student     User     @relation(fields: [studentId], references: [id], name: "UserNotifications") // Agregar nombre a la relación
+  studentId   Int      // Cambia a Int para coincidir con el tipo de ID de User
   message     String
+  cita        Citas    @relation(fields: [citaId], references: [id], name: "CitaNotifications")  // Relación con la cita
   citaId      Int
   createdAt   DateTime @default(now())
 }
+

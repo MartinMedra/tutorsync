@@ -5,20 +5,20 @@ import disponibilidad from "./routes/disponibilidad.js";
 import cita from "./routes/cita.js";
 import ticket from "./routes/ticket.js";
 import user from "./routes/user.js";
+import notification from "./routes/notifications.js";
 import 'dotenv/config';
 import { Server } from "socket.io";
 import http from "http";
+import jwt from "jsonwebtoken"; // Asegúrate de tener jwt en tus dependencias
 
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Permitir el acceso desde tu frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
-
 app.use(express.json());
-
 
 app.get("/", (req, res) => {
   res.send("app funcionando correctamente");
@@ -29,52 +29,50 @@ app.use("/", disponibilidad);
 app.use("/", cita);
 app.use("/", ticket);
 app.use("/", user);
+app.use('/', notification);
 
-//Creando el servidor HTTP
+// Creando el servidor HTTP
 const server = http.createServer(app);
 
-//Configurando Socket.io
+// Configurando Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // Cambia esto al puerto donde corre tu frontend
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"]
   }
 });
 
-// server.js (actualización)
+// Middleware de autenticación para WebSocket
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (token) {
-    // Verifica el token y obtiene el studentId
-    const decoded = jwt.verify(token, 'JWT_SECRET'); // Usa tu método de verificación
-    socket.studentId = decoded.id;
-    next();
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      socket.studentId = decoded.id;
+      next();
+    } catch (err) {
+      next(new Error("Token inválido"));
+    }
   } else {
     next(new Error("Autenticación requerida"));
   }
 });
 
-// Maneja las conexiones de Socket.IO
-io.on('connection', (socket) => {
-  console.log(`Usuario conectado: ${socket.id}`);
+// Manejo de conexiones de Socket.IO
+io.on("connection", (socket) => {
+  socket.on("join", (userId) => {
+    socket.join(`user_${userId}`);
+    console.log(`User with ID ${userId} joined room user_${userId}`);
+  });
 
-// Escucha un evento para unirse a una room específica
-socket.on('join', (studentId) => {
-  socket.join(`user_${studentId}`);
-  console.log(`Usuario ${socket.id} se unió a la room user_${studentId}`);
+  socket.on('disconnect', () => {
+    console.log(`Usuario desconectado: ${socket.id}`);
+  });
 });
 
-// Escucha eventos personalizados si es necesario
-
-socket.on('disconnect', () => {
-  console.log(`Usuario desconectado: ${socket.id}`);
-});
+// Iniciar el servidor HTTP y Socket.IO
+server.listen(3000, () => {
+  console.log("Servidor escuchando en el puerto 3000");
 });
 
-// Exporta io para usarlo en otros archivos
 export { io };
-
-
-
-app.listen(3000);
-console.log("Server on port", 3000);
