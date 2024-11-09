@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     const { user, loading } = useContext(AuthContext);
 
     if (loading) {
-        return <div>Loading...</div>; // Puedes mostrar un spinner o una pantalla de carga aquí
+        return <div>Loading...</div>;
     }
 
     if (!user) {
@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     }
 
     if (requiredRole && user.role !== requiredRole) {
-        return <Navigate to="/" />;
+        return <Navigate to={user.role === "Tutor" ? "/tutor" : "/estudiante"} />;
     }
 
     return children;

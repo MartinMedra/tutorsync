@@ -1,3 +1,5 @@
+// DisponibilidadContext.js
+
 import { createContext, useState } from 'react';
 import axios from 'axios';
 import propTypes from 'prop-types';
@@ -12,18 +14,20 @@ export const DisponibilidadProvider = ({ children }) => {
   const [error, setError] = useState('');
 
   // Función para obtener la disponibilidad de un profesor
-  const fetchDisponibilidad = async (professorId) => {
-    setLoading(true);
-    try {
+const fetchDisponibilidad = async (professorId) => {
+  setLoading(true);
+  setError(""); // Limpiar errores previos
+  try {
       const response = await axios.get(`http://localhost:3000/profesor/disponibilidad/${professorId}`);
       setDisponibilidad(response.data);
-    } catch (error) {
+  } catch (error) {
       setError('Error al obtener disponibilidad');
-      console.error('Error al obtener disponibilidad:', error);
-    } finally {
+      console.error('Error al obtener disponibilidad:', error.response ? error.response.data : error.message);
+  } finally {
       setLoading(false);
-    }
-  };
+  }
+};
+
 
   // Función para crear una nueva disponibilidad
   const createDisponibilidad = async (data) => {

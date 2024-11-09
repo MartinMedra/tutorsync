@@ -1,3 +1,5 @@
+//AuthContext.jsx
+
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import propTypes from "prop-types";
@@ -36,12 +38,18 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await axios.post("http://localhost:3000/login", { email, password });
             localStorage.setItem("token", response.data.token);
-            setUser(response.data);
+            
+            // Después de iniciar sesión, obtener los datos del perfil del usuario
+            const profileResponse = await axios.get("http://localhost:3000/profile", {
+                headers: { Authorization: `Bearer ${response.data.token}` },
+            });
+            setUser(profileResponse.data);
             setIsAuthenticated(true);
         } catch (error) {
             throw new Error("Error al iniciar sesión");
         }
     };
+    
 
     const logout = () => {
         setIsAuthenticated(false);

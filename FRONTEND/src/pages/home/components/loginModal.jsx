@@ -11,19 +11,22 @@ const LoginModal = ({ isOpen, closeModal }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { login, loading } = useContext(AuthContext);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login({ email, password });
-      setError('');
-      navigate('/estudiante');
+        await login({ email, password });
+        setError('');
+        // Esperar a que loading esté en false
+        if (!loading) {
+            navigate('/estudiante');
+        }
     } catch (error) {
-      setError("Verifica tus credenciales");
+        setError("Verifica tus credenciales");
     }
-  };
+};
 
   return (
     <>
@@ -59,38 +62,6 @@ const LoginModal = ({ isOpen, closeModal }) => {
           </form>
         </div>
       </Modal>
-      {/* <form onSubmit={handleLogin} className="form">
-          <input
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="input"
-            type="email"
-            name="email"
-            id="email"
-            placeholder="E-mail"
-            />
-          <input
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input"
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Password"
-            />
-          {error && <span className="text-red-500 text-xs italic mb-4">{error}</span>}
-          <span className="forgot-password">No tienes cuenta?<a className='cursor-pointer' onClick={() => {closeModal(); setIsRegisterOpen(true);}}>registrate aquí</a></span>
-          <input className="login-button" type="submit" value="Sign In" />
-        </form>
-        <div className="social-account-container">
-          <span className="title">Or Sign in with</span>
-          <div className="social-accounts">
-          </div>
-        </div>
-        <span className="agreement"><a href="#">Learn user licence agreement</a></span>
-      </div> */}
       <RegisterModal isOpen={isRegisterOpen} closeModal={() => setIsRegisterOpen(false)} />
     </>
   );

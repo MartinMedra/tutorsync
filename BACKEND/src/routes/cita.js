@@ -40,22 +40,24 @@ router.post("/citas", async (req, res) => {
   }
 });
 
-// Obtener todas las citas de un profesor
-  router.get("/profesor/:id/citas", async (req, res) => {
+// Obtener todas las citas pendientes de un profesor
+router.get("/profesor/:id/citas", async (req, res) => {
   const { id } = req.params; // ID del profesor
 
   try {
     const citas = await prisma.citas.findMany({
-      where: { professorId: parseInt(id) }, // Filtrar citas por ID del profesor
+      where: { 
+        professorId: parseInt(id),
+        status: "pending" // Filtrar solo citas pendientes
+      },
       include: {
-        student: true, // Incluir información del estudiante, si es necesario
-        disponibilidad: true, // Incluir la disponibilidad, si deseas ver esa información también
+        student: true,
+        disponibilidad: true,
       },
     });
 
-    // Si no hay citas, devolver un mensaje
     if (citas.length === 0) {
-      return res.status(404).json({ message: "No se encontraron citas para este profesor." });
+      return res.status(404).json({ message: "No se encontraron citas pendientes para este profesor." });
     }
 
     res.json(citas);

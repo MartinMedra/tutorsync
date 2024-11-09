@@ -1,18 +1,90 @@
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar} from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function HeaderTutor() {
-  return (
-    <header className="bg-white shadow p-4 flex justify-between items-center px-6">
-      <div className="text-lg font-semibold text-gray-700">¡Buenos días, Profesor!</div>
-      <div className="flex items-center space-x-4">
-        <button className="text-gray-500 hover:text-gray-700">🔔</button>
-        <img
-          src="https://via.placeholder.com/40"
-          alt="Perfil"
-          className="w-10 h-10 rounded-full border-2 border-gray-300"
-        />
-      </div>
-    </header>
-  );
+export default function HeaderTutor() {
+
+  const [user, setUser] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('No estás autenticado.');
+        return;
+      }
+      try {
+        const response = await axios.get('http://localhost:3000/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setUser(response.data);
+        // console.log(response.data);
+      } catch (error) {
+        setError('Error al cargar el perfil.');
+      }
+    };
+  
+    fetchProfile();
+  }, []);
+
+  const navigate = useNavigate();
+
+  const handlelogout = () =>{
+    localStorage.removeItem('token');
+    navigate('/');
 }
 
-export default HeaderTutor;
+  return (
+    <Navbar>
+      <NavbarBrand>
+        <p className="font-bold text-inherit">TutorSync</p>
+      </NavbarBrand>
+
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarItem isActive>
+          <Link color="secondary" href="#">
+            Inicio
+          </Link>
+        </NavbarItem>
+        <NavbarItem >
+          <Link href="#" aria-current="page" color="foreground">
+            Citas
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Profesores
+          </Link>
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarContent as="div" justify="end">
+        <Dropdown placement="bottom-end">
+          <DropdownTrigger>
+            <Avatar
+              isBordered
+              as="button"
+              className="transition-transform"
+              color="secondary"
+              name="Jason Hughes"
+              size="sm"
+              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+            />
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="profile" className="h-14 gap-2">
+              <p className="font-semibold">{user.role}</p>
+              <p className="font-semibold">{user.name}</p>
+            </DropdownItem>
+            <DropdownItem key="settings">Perfil</DropdownItem>
+            <DropdownItem onClick={handlelogout} key="logout" color="danger">
+              Cerrar Sesión
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </NavbarContent>
+    </Navbar>
+  );
+}

@@ -15,7 +15,7 @@ import {
 } from "@nextui-org/react";
 
 function TeacherSearch() {
-  const { tutors, loading, error } = useContext(TutorContext);
+  const { tutors, loading, error } = useContext(TutorContext); // Obtén los tutores del contexto
   const { user } = useContext(AuthContext); // Obtén el usuario autenticado del contexto
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
