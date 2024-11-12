@@ -35,9 +35,14 @@ export default function NavbarHome() {
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-      <NavbarItem>
+        <NavbarItem>
           <LinkScroll to="hero" smooth={true} duration={1000} className="text-gray-300 cursor-pointer hover:text-rosado">
             Inicio
+          </LinkScroll>
+        </NavbarItem>
+        <NavbarItem>
+          <LinkScroll to="funcionalidades" smooth={true} duration={1000} className="text-gray-300 cursor-pointer hover:text-rosado">
+            Funciones
           </LinkScroll>
         </NavbarItem>
         <NavbarItem>

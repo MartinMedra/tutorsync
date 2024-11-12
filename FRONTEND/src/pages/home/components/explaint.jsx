@@ -1,10 +1,12 @@
+import TeacherImage from '../../../assets/svg/Teacher.png';
+
 export default function Explaint() {
 
     return (
-        <section className="text-gray-600 body-font bg-white">
-            <div className="container px-5 py-24 mx-auto flex flex-wrap">
-                <div className="max-lg:hidden lg:w-1/2 w-full mb-10 lg:mb-0 rounded-lg overflow-hidden">
-                    <img alt="feature" className="object-cover object-center h-full w-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup.svg" />
+        <section className="text-gray-600 body-font bg-white " id="funcionalidades">
+            <div className="container px-5 py-24 mx-auto flex flex-wrap" data-aos="fade-right" data-aos-duration="1800">
+                <div className="max-lg:hidden lg:w-1/2 w-full mb-10 lg:mb-0 rounded-lg overflow-hidden ">
+                    <img alt="feature" className="object-cover object-center rounded" src={TeacherImage} />
                 </div>
                 <div className="flex flex-col flex-wrap lg:py-6 -mb-10 lg:w-1/2 lg:pl-12 lg:text-center text-center">
                     <div className="flex flex-col mb-10 lg:items-center items-center">
