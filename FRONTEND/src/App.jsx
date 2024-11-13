@@ -6,6 +6,7 @@ import TutorHome from './pages/tutor/main/tutorHome';
 import { AuthProvider } from './context/AuthContext/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
+import StudentIni from './pages/student/main/StudentHome';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/t" element={<StudentIni />} />
             <Route
                 path="/tutor"
                 element={

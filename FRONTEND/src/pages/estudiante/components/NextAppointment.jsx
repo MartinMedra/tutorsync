@@ -29,7 +29,7 @@ function NextAppointment() {
       fetchTickets();
     }
   }
-  }, [user,loading]);
+  }, [user]);
 
   const formatFecha = (date) => {
     const options = { day: 'numeric', month: 'long' };
