@@ -18,7 +18,7 @@ router.get("/tutores", async (req, res) => {
           id: true,
           name: true,
           email: true,
-          identification: true,
+          subject: true,
         },
       });
   
@@ -64,5 +64,50 @@ router.get('/profile', authenticateToken, async (req, res)=>{
         res.status(500).json({ error: 'Error al obtener los datos del perfil', detail: error.message });
     }
 })
+
+/**
+ * Actualizar datos del perfil del usuario autenticado
+ */
+router.put('/updateprofile', authenticateToken, async (req, res) => {
+  const { name, email, password, identification, subject } = req.body;
+
+  try {
+      const updatedData = {
+          name,
+          email,
+          identification,
+          subject,
+      };
+
+      // Si se proporciona una contraseña nueva, hashearla antes de actualizarla
+      if (password) {
+          updatedData.password = await bcrypt.hash(password, 10);
+      }
+
+      const updatedUser = await prisma.user.update({
+          where: { id: req.user.id },
+          data: updatedData,
+      });
+
+      res.json({ message: 'Perfil actualizado correctamente', user: updatedUser });
+  } catch (error) {
+      res.status(500).json({ error: 'Error al actualizar el perfil', detail: error.message });
+  }
+});
+
+/**
+* Eliminar el perfil del usuario autenticado
+*/
+router.delete('/deleteprofile', authenticateToken, async (req, res) => {
+  try {
+      await prisma.user.delete({
+          where: { id: req.user.id },
+      });
+
+      res.json({ message: 'Perfil eliminado correctamente' });
+  } catch (error) {
+      res.status(500).json({ error: 'Error al eliminar el perfil', detail: error.message });
+  }
+});
 
 export default router;

@@ -1,18 +1,47 @@
+// components/Sidebar.js
+import propTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
+const sections = [
+  { name: "Gestion de Citas", icon: "📘" },
+  { name: "Historial de Citas", icon: "🕒" },
+  { name: "Perfil", icon: "👤" },
+];
 
-function Sidebar() {
+function Sidebar({ selectedSection, setSelectedSection }) {
+
+    const navigate = useNavigate();
+    const handlelogout = () =>{
+      localStorage.removeItem('token');
+      navigate('/');
+  }
   return (
-    <aside className="w-64 bg-purple-800 text-white flex flex-col items-center p-6 space-y-4">
-      <div className="text-2xl font-bold">AppProfesor</div>
-      <div className="space-y-2 mt-8">
-        <button className="w-full text-left p-2 hover:bg-purple-700 rounded-md">Dashboard</button>
-        <button className="w-full text-left p-2 hover:bg-purple-700 rounded-md">Citas Solicitadas</button>
-        <button className="w-full text-left p-2 hover:bg-purple-700 rounded-md">Gestión de Disponibilidad</button>
-        <button className="w-full text-left p-2 hover:bg-purple-700 rounded-md">Historial de Citas</button>
-        <button className="w-full text-left p-2 hover:bg-purple-700 rounded-md">Notificaciones</button>
-      </div>
+    <aside className="md:w-1/5 w-full bg-white p-5 shadow-md md:block">
+      <h1 className="text-2xl font-bold mb-4">Tutorías</h1>
+      <nav className="flex md:flex-col w-full space-y-2 md:space-y-0">
+        {sections.map((section) => (
+          <button
+            key={section.name}
+            className={`flex items-center space-x-3 py-2 px-3 w-full text-left rounded-md hover:bg-gray-200 hover:font-semibold ${selectedSection === section.name ? "bg-gray-200" : ""
+              }`}
+            onClick={() => setSelectedSection(section.name)}
+          >
+            <span>{section.icon}</span>
+            <span>{section.name}</span>
+          </button>
+        ))}
+        <button onClick={handlelogout} key="logout" className="flex items-center space-x-3 py-2 px-3 w-full text-left rounded-md hover:bg-[#FF5484] hover:text-white hover:font-bold">
+          <span>🚪</span>
+          <span>Salir</span>
+        </button>
+      </nav>
     </aside>
   );
 }
+
+Sidebar.propTypes = {
+  selectedSection: propTypes.func.isRequired,
+  setSelectedSection: propTypes.func.isRequired,
+};
 
 export default Sidebar;

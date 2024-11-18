@@ -35,11 +35,6 @@ function Header() {
       <h2 className="text-2xl font-semibold">Hola, {user.name}!</h2>
       <p className="text-gray-600">Aquí puedes administrar tus tutorías y citas.</p>
     </div>
-    <input
-      type="text"
-      placeholder="Buscar..."
-      className="mt-4 md:mt-0 px-4 py-2 border rounded-md focus:outline-none w-full md:w-1/3"
-    />
   </header>
   );
 }

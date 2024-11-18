@@ -1,74 +1,120 @@
 import React, { useState, useEffect, useContext } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import TimePicker from "react-time-picker";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext/AuthContext";
 
-const AvailabilityManagement = () => {
-    const { user } = useContext(AuthContext);
-    const [disponibilidad, setDisponibilidad] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [message, setMessage] = useState("");
+const AvailabilityWithRequests = () => {
+  const { user } = useContext(AuthContext);
+  const [disponibilidades, setDisponibilidades] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
-    // Obtener la disponibilidad del profesor al cargar el componente
-    useEffect(() => {
-        if (user && user.role === "Tutor") {
-            fetchDisponibilidad();
-        }
-    }, [user]);
+  useEffect(() => {
+    if (user && user.role === "Tutor") {
+      fetchDisponibilidades();
+    }
+  }, [user]);
 
-    const fetchDisponibilidad = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`http://localhost:3000/profesor/disponibilidad/${user.id}`);
-            setDisponibilidad(response.data);
-        } catch (error) {
-            setError("Error al obtener disponibilidad");
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+  // Obtener disponibilidades con citas asociadas
+  const fetchDisponibilidades = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:3000/profesor/disponibilidad-con-citas/${user.id}`);
+      setDisponibilidades(response.data); // Este endpoint debería devolver disponibilidades con sus citas relacionadas
+    } catch (error) {
+      setError("Error al cargar disponibilidades y citas");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    
+  // Eliminar una disponibilidad
+  const deleteDisponibilidad = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/profesor/disponibilidad/${id}`);
+      setDisponibilidades((prev) => prev.filter((item) => item.id !== id));
+      setMessage("Disponibilidad eliminada.");
+    } catch (error) {
+      setError("Error al eliminar disponibilidad");
+      console.error(error);
+    }
+  };
 
-    // Eliminar una disponibilidad
-    const deleteDisponibilidad = async (id) => {
-        try {
-            await axios.delete(`http://localhost:3000/profesor/disponibilidad/${id}`);
-            setDisponibilidad((prev) => prev.filter((item) => item.id !== id));
-            setMessage("Disponibilidad eliminada.");
-        } catch (error) {
-            setError("Error al eliminar disponibilidad");
-            console.error(error);
-        }
-    };
+  // Confirmar una cita
+  const confirmCita = async (citaId, disponibilidadId) => {
+    try {
+      const response = await axios.put(`http://localhost:3000/citas/${citaId}/confirm`);
+      const confirmedCita = response.data.citaConfirmada;
 
-    return (
-        <div className="disponibilidad-management">
-            <h2>Disponibilidad del Profesor</h2>
-            {message && <p>{message}</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+      // Actualizar el estado local
+      setDisponibilidades((prev) =>
+        prev.map((disponibilidad) =>
+          disponibilidad.id === disponibilidadId
+            ? {
+                ...disponibilidad,
+                citas: disponibilidad.citas.map((cita) =>
+                  cita.id === confirmedCita.id
+                    ? { ...cita, status: "confirmed" }
+                    : cita.status === "pending"
+                    ? { ...cita, status: "rejected" }
+                    : cita
+                ),
+              }
+            : disponibilidad
+        )
+      );
 
-            {/* Mostrar lista de disponibilidades */}
-            {loading ? (
-                <p>Cargando...</p>
-            ) : disponibilidad.length > 0 ? (
-                <ul>
-                    {disponibilidad.map((slot) => (
-                        <li key={slot.id}>
-                            Fecha: {new Date(slot.date).toLocaleDateString()} | Desde: {new Date(slot.startTime).toLocaleTimeString()} | Hasta: {new Date(slot.endTime).toLocaleTimeString()}
-                            <button onClick={() => deleteDisponibilidad(slot.id)}>Eliminar</button>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No hay disponibilidad para mostrar.</p>
-            )}
+      setMessage("Cita confirmada y otras solicitudes rechazadas.");
+    } catch (error) {
+      setError("Error al confirmar la cita");
+      console.error(error);
+    }
+  };
+
+  return (
+    <div className="availability-with-requests">
+      <h2>Disponibilidad con Solicitudes</h2>
+      {message && <p>{message}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {loading ? (
+        <p>Cargando...</p>
+      ) : disponibilidades.length > 0 ? (
+        <div>
+          {disponibilidades.map((disponibilidad) => (
+            <div key={disponibilidad.id} className="disponibilidad-card">
+              <h3>
+                Fecha: {new Date(disponibilidad.date).toLocaleDateString()} | Horario:{" "}
+                {new Date(disponibilidad.startTime).toLocaleTimeString()} -{" "}
+                {new Date(disponibilidad.endTime).toLocaleTimeString()}
+              </h3>
+              <button onClick={() => deleteDisponibilidad(disponibilidad.id)}>Eliminar Disponibilidad</button>
+
+              <div className="citas-list">
+                {disponibilidad.citas.length > 0 ? (
+                  disponibilidad.citas.map((cita) => (
+                    <div key={cita.id} className="cita-item">
+                      <p>Estudiante: {cita.student.name}</p>
+                      <p>Modalidad: {cita.mode}</p>
+                      <p>Estado: {cita.status}</p>
+                      {cita.status === "pending" && (
+                        <button onClick={() => confirmCita(cita.id, disponibilidad.id)}>Confirmar Cita</button>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p>No hay solicitudes para esta disponibilidad.</p>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
-    );
+      ) : (
+        <p>No hay disponibilidades para mostrar.</p>
+      )}
+    </div>
+  );
 };
 
-export default AvailabilityManagement;
+export default AvailabilityWithRequests;
