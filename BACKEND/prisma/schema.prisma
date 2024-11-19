@@ -8,65 +8,64 @@ generator client {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  name          String
-  email         String    @unique
-  password      String
-  role          String    // "professor" or "student"
-  identification String
-  subject        String    @default(" ")// Materia que imparte el profesor
-  studentAppointments Citas[] @relation("StudentCitas")
-  professorAppointments Citas[] @relation("ProfessorCitas")
-  Disponibilidad Disponibilidad[]  // Disponibilidad del profesor
-  notifications  Notification[] @relation("UserNotifications")
+  id                     Int              @id @default(autoincrement())
+  name                   String
+  email                  String           @unique
+  password               String
+  role                   String           // "professor" or "student"
+  identification         String
+  subject                String           @default(" ") // Materia que imparte el profesor
+  studentAppointments    Citas[]          @relation("StudentCitas")
+  professorAppointments  Citas[]          @relation("ProfessorCitas")
+  Disponibilidad         Disponibilidad[] // Disponibilidad del profesor
+  notifications          Notification[]   @relation("UserNotifications")
 }
 
 model Disponibilidad {
-  id           Int      @id @default(autoincrement())
-  professor    User     @relation(fields: [professorId], references: [id])
+  id           Int       @id @default(autoincrement())
+  professor    User      @relation(fields: [professorId], references: [id])
   professorId  Int
-  date         DateTime // Fecha de la disponibilidad
-  startTime   DateTime // Hora de inicio de la disponibilidad
-  endTime     DateTime // Hora de finalización de la disponibilidad
-  createdAt   DateTime @default(now()) // Para tener un registro de cuándo se agregó
-  Citas       Citas[]  // Relación uno a muchos con Citas
+  date         DateTime  // Fecha de la disponibilidad
+  startTime    DateTime  // Hora de inicio de la disponibilidad
+  endTime      DateTime  // Hora de finalización de la disponibilidad
+  createdAt    DateTime  @default(now()) // Para tener un registro de cuándo se agregó
+  Citas        Citas[]  
 }
 
 model Citas {
-  id            Int       @id @default(autoincrement())
-  student       User      @relation(fields: [studentId], references: [id], name: "StudentCitas")
-  studentId     Int
-  professor     User      @relation(fields: [professorId], references: [id], name: "ProfessorCitas")
-  professorId   Int
-  date          DateTime  // Fecha de la cita
-  startTime     DateTime  // Hora de inicio de la cita
-  endTime       DateTime  // Hora de fin de la cita
-  disponibilidad     Disponibilidad @relation(fields: [disponibilidadId], references: [id]) // Agregar la relación
-  disponibilidadId Int     // Relación con la disponibilidad
-  mode          String    // "virtual" o "presencial"
-  status        String    // "pending", "accepted", "rejected"
-  tickets       Ticket[]  // Relación uno a muchos con Ticket
-  notifications        Notification[] @relation("CitaNotifications")
+  id               Int              @id @default(autoincrement())
+  student          User             @relation(fields: [studentId], references: [id], name: "StudentCitas")
+  studentId        Int
+  professor        User             @relation(fields: [professorId], references: [id], name: "ProfessorCitas")
+  professorId      Int
+  date             DateTime         // Fecha de la cita
+  startTime        DateTime         // Hora de inicio de la cita
+  endTime          DateTime         // Hora de fin de la cita
+  disponibilidad   Disponibilidad   @relation(fields: [disponibilidadId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  disponibilidadId Int
+  mode             String           // "virtual" o "presencial"
+  status           String           // "pending", "accepted", "rejected"
+  tickets          Ticket[]         // Eliminar tickets asociados automáticamente
+  notifications    Notification[]   @relation("CitaNotifications")
 }
 
 model Ticket {
   id            Int       @id @default(autoincrement())
   citasId       Int
-  citas         Citas     @relation(fields: [citasId], references: [id])
+  citas         Citas     @relation(fields: [citasId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Eliminar ticket si se elimina la cita
   studentName   String
   studentEmail  String
-  studentId     String     // Identificación del estudiante
-  createdAt     DateTime   @default(now())
-  status        String     // Estado de la cita (esperando, aceptada, rechazada)
+  studentId     String    // Identificación del estudiante
+  createdAt     DateTime  @default(now())
+  status        String    // Estado de la cita (esperando, aceptada, rechazada)
 }
 
 model Notification {
-  id          Int      @id @default(autoincrement())
-  student     User     @relation(fields: [studentId], references: [id], name: "UserNotifications") // Agregar nombre a la relación
-  studentId   Int      // Cambia a Int para coincidir con el tipo de ID de User
+  id          Int        @id @default(autoincrement())
+  student     User       @relation(fields: [studentId], references: [id], name: "UserNotifications")
+  studentId   Int
   message     String
-  cita        Citas    @relation(fields: [citaId], references: [id], name: "CitaNotifications")  // Relación con la cita
+  cita        Citas      @relation(fields: [citaId], references: [id], name: "CitaNotifications", onDelete: Cascade, onUpdate: Cascade)
   citaId      Int
-  createdAt   DateTime @default(now())
+  createdAt   DateTime   @default(now())
 }
-

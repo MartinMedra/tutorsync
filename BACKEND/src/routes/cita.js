@@ -40,8 +40,7 @@ router.post("/citas", async (req, res) => {
   }
 });
 
-// Eliminar una solicitud de cita
-
+// Eliminar una cita
 router.delete("/deletecitas/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -52,23 +51,20 @@ router.delete("/deletecitas/:id", async (req, res) => {
     });
 
     if (!cita) {
-      return res.status(404).json({ error: "Solicitud no encontrada" });
+      return res.status(404).json({ error: "Solicitud de cita no encontrada" });
     }
 
-    // Eliminar la solicitud
+    // Eliminar la cita (esto eliminará automáticamente los tickets relacionados gracias a la opción onDelete: Cascade)
     await prisma.citas.delete({
       where: { id: parseInt(id) },
     });
 
-    res.json({ message: "Solicitud eliminada con éxito" });
+    res.json({ message: "Solicitud de cita eliminada con éxito" });
   } catch (error) {
-    console.error("Error al eliminar la solicitud:", error);
-    res.status(500).json({
-      error: "Error al eliminar la solicitud",
-      details: error.message,
-    });
+    res.status(500).json({ error: "Error al eliminar la solicitud", details: error.message });
   }
 });
+
 
 //Obtener todas las solicitudes pendientes de un estudiante
 

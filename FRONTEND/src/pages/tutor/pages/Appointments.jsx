@@ -1,5 +1,5 @@
 import AvailabilityManagement from "../components/AvailabilityManagement";
-import RequestAppointments from "../components/RequestedAppointments";
+import RequestAppointments from "../components/RequestAppointments";
 
 function Appointments () {
   return (

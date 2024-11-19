@@ -70,7 +70,7 @@ const AvailabilityManagement = () => {
         </div>
         <div className="flex flex-col justify-evenly">
           <div className="flex flex-col gap-2">
-            <label>Hora Inicio:</label>
+            <label className="text-green-400">Hora Inicio:</label>
             <DatePicker
               selected={startTime}
               onChange={(newTime) => setStartTime(newTime)}
@@ -79,12 +79,12 @@ const AvailabilityManagement = () => {
               timeIntervals={15}
               timeCaption="Hora"
               dateFormat="h:mm aa"
-              className="w-full px-6 py-3 text-black bg-white border cursor-pointer border-green-300 rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+              className="w-full px-6 py-3 text-black bg-white border cursor-pointer border-green-400 rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label>Hora Fin:</label>
+            <label className="text-red-400">Hora Fin:</label>
             <DatePicker
               selected={endTime}
               onChange={(newTime) => setEndTime(newTime)}
@@ -93,7 +93,7 @@ const AvailabilityManagement = () => {
               timeIntervals={15}
               timeCaption="Hora"
               dateFormat="h:mm aa"
-              className="w-full px-6 py-3 text-black bg-white border cursor-pointer border-red-300 rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+              className="w-full px-6 py-3 text-black bg-white border cursor-pointer border-red-400 rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
             />
           </div>
         </div>

@@ -67,14 +67,31 @@ router.put("/profesor/disponibilidad/:id", async (req, res) => {
 
 // Eliminar disponibilidad
 router.delete("/profesor/disponibilidad/:id", async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      await prisma.disponibilidad.delete({ where: { id: parseInt(id) } });
-      res.json({ message: "Disponibilidad eliminada" });
-    } catch (error) {
-      res.status(500).json({ error: "Error al eliminar disponibilidad", details: error.message });
+  const { id } = req.params;
+
+  try {
+    // Primero, verifica si hay citas asociadas
+    const citas = await prisma.citas.findMany({
+      where: { disponibilidadId: parseInt(id) },
+    });
+
+    if (citas.length > 0) {
+      return res.status(400).json({
+        error: "No se puede eliminar la disponibilidad porque tiene citas asociadas.",
+      });
     }
-  });
+
+    // Si no hay citas, elimina la disponibilidad
+    await prisma.disponibilidad.delete({
+      where: { id: parseInt(id) },
+    });
+
+    res.json({ message: "Disponibilidad eliminada exitosamente" });
+  } catch (error) {
+    res.status(500).json({ error: "Error al eliminar disponibilidad", details: error.message });
+  }
+});
+
+
 
 export default router;

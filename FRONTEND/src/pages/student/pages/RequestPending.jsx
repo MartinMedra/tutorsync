@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext/AuthContext"; // Ajusta la ruta según tu estructura de archivos
 import axios from "axios";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 const RequestPending = () => {
   const { user, loading } = useContext(AuthContext); // Obtener el usuario del contexto
@@ -61,18 +63,19 @@ const RequestPending = () => {
                   Profesor: {solicitud.professor.name}
                 </h2>
                 <p>Asignatura: {solicitud.professor.subject}</p>
-                <p>Fecha: {new Date(solicitud.date).toLocaleDateString()}</p>
+                <p>
+                  Fecha:{" "}
+                  {format(new Date(solicitud.date), "EEEE, d 'de' MMMM", {
+                    locale: es,
+                  })}
+                </p>
                 <p>
                   Hora:{" "}
-                  {new Date(solicitud.startTime).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}{" "}
-                  -{" "}
-                  {new Date(solicitud.endTime).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {`De ${format(
+                    new Date(solicitud.startTime),
+                    "hh:mm a"
+                  )} a ${format(new Date(solicitud.endTime), "hh:mm a")}`}
+                
                 </p>
                 <p>Modalidad: {solicitud.mode}</p>
               </div>
