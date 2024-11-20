@@ -1,21 +1,18 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext/AuthContext";
+import { useAlert } from "../../../context/AlertContext"; // Importar el contexto de alertas
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import CitaCard from "./CitaCard";
-import ModalTutor from "./ModalTutor";
 
 const RequestAppointments = () => {
   const { user } = useContext(AuthContext);
+  const { showAlert } = useAlert(); // Acceso al método para mostrar alertas
   const [disponibilidades, setDisponibilidades] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // Estado para controlar el modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState("");
 
   useEffect(() => {
     if (user && user.role === "Tutor") {
@@ -37,6 +34,7 @@ const RequestAppointments = () => {
       setDisponibilidades(transformedData);
     } catch (error) {
       console.error(error);
+      showAlert("Error al cargar disponibilidades.", "error");
     } finally {
       setLoading(false);
     }
@@ -47,11 +45,9 @@ const RequestAppointments = () => {
     try {
       await axios.delete(`http://localhost:3000/profesor/disponibilidad/${id}`);
       setDisponibilidades((prev) => prev.filter((item) => item.id !== id));
-      setModalContent("Disponibilidad eliminada.");
-      setIsModalOpen(true);
+      showAlert("Disponibilidad eliminada con éxito.", "success");
     } catch (error) {
-      setModalContent("Error al eliminar disponibilidad.");
-      setIsModalOpen(true);
+      showAlert("La disponibilidad ya tiene estudiantes asociados", "failure");
       console.error(error);
     }
   };
@@ -82,17 +78,15 @@ const RequestAppointments = () => {
         )
       );
 
-      setModalContent("Cita confirmada y otras solicitudes rechazadas.");
-      setIsModalOpen(true);
+      showAlert(
+        "Cita confirmada y otras solicitudes rechazadas automáticamente.",
+        "success"
+      );
     } catch (error) {
-      setModalContent("Error al confirmar la cita.");
-      setIsModalOpen(true);
+      showAlert("Error al confirmar la cita.", "failure");
       console.error(error);
     }
   };
-
-  // Función para cerrar el modal
-  const closeModalTutor = () => setIsModalOpen(false);
 
   return (
     <div className="availability-with-requests">
@@ -125,13 +119,15 @@ const RequestAppointments = () => {
                   disponibilidad.citas.map((cita) => (
                     <CitaCard
                       key={cita.id}
+                      citaId={cita.id}
                       student={cita.student.name}
                       mode={cita.mode}
                       status={cita.status}
+                      phone={cita.phone}
+                      actuallyUrl={cita.url}
                       onAccept={() => confirmCita(cita.id, disponibilidad.id)}
                       onReject={() =>
-                        setModalContent("Cita rechazada.") ||
-                        setIsModalOpen(true)
+                        showAlert("Cita rechazada.", "info")
                       }
                     />
                   ))
@@ -140,12 +136,12 @@ const RequestAppointments = () => {
                 )}
                 {/* Botón para eliminar la disponibilidad */}
                 <div className="mt-4 flex justify-end">
-                <button
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                onClick={() => deleteDisponibilidad(disponibilidad.id)}
-              >
-                Eliminar
-              </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    onClick={() => deleteDisponibilidad(disponibilidad.id)}
+                  >
+                    Eliminar
+                  </button>
                 </div>
               </AccordionItem>
             ))}
@@ -154,17 +150,6 @@ const RequestAppointments = () => {
       ) : (
         <p className="font-extralight">No hay disponibilidades disponibles.</p>
       )}
-
-      {/* Modal */}
-      <ModalTutor isOpen={isModalOpen} closeModalTutor={closeModalTutor}>
-        <p>{modalContent}</p>
-        <button
-          onClick={closeModalTutor}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Cerrar
-        </button>
-      </ModalTutor>
     </div>
   );
 };

@@ -13,7 +13,7 @@ model User {
   email                  String           @unique
   password               String
   role                   String           // "professor" or "student"
-  identification         String
+  identification         String           
   subject                String           @default(" ") // Materia que imparte el profesor
   studentAppointments    Citas[]          @relation("StudentCitas")
   professorAppointments  Citas[]          @relation("ProfessorCitas")
@@ -44,6 +44,8 @@ model Citas {
   disponibilidad   Disponibilidad   @relation(fields: [disponibilidadId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   disponibilidadId Int
   mode             String           // "virtual" o "presencial"
+  phone            String           @default(" ") // Teléfono del profesor
+  url              String           @default(" ") // URL de la reunión virtual
   status           String           // "pending", "accepted", "rejected"
   tickets          Ticket[]         // Eliminar tickets asociados automáticamente
   notifications    Notification[]   @relation("CitaNotifications")

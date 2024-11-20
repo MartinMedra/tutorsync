@@ -1,6 +1,6 @@
 import HeroImage from '../../../assets/svg/Calendar.png';
-import LoginModal from './loginModal';
 import { useState } from 'react';
+import RegisterModal from './registerModal';
 
 
 export default function HeroHome() {
@@ -27,8 +27,7 @@ export default function HeroHome() {
           <img className="object-cover object-center rounded" alt="hero" src={HeroImage} />
         </div>
       </div>
-
-      <LoginModal isOpen={isLoginOpen} closeModal={() => setIsLoginOpen(false)} />
+      <RegisterModal isOpen={isLoginOpen} closeModal={() => setIsLoginOpen(false)} />
     </section>
   );
 }

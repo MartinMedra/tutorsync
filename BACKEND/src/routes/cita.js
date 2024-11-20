@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import { io } from "../app.js"; // Asegúrate de que la ruta esté correcta
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -8,7 +11,7 @@ const prisma = new PrismaClient();
 
 
 router.post("/citas", async (req, res) => {
-  const { studentId, disponibilidadId, mode } = req.body;
+  const { studentId, phone, disponibilidadId, mode } = req.body;
 
   try {
     // Buscar la disponibilidad seleccionada
@@ -24,6 +27,7 @@ router.post("/citas", async (req, res) => {
     const nuevaCita = await prisma.citas.create({
       data: {
         studentId,
+        phone,
         professorId: disponibilidad.professorId,
         date: disponibilidad.date,
         startTime: disponibilidad.startTime,
@@ -33,7 +37,7 @@ router.post("/citas", async (req, res) => {
         status: "pending", // Estado inicial de la cita
       },
     });
-
+    
     res.json(nuevaCita);
   } catch (error) {
     res.status(500).json({ error: "Error al crear la cita", details: error.message });
@@ -177,6 +181,24 @@ router.get("/profesor/disponibilidad-con-solicitudes/:id", async (req, res) => {
   }
 });
 
+// Actualizar la url de la reunión de una cita
+router.put("/citas/:id/url", async (req, res) => {
+  const { id } = req.params;
+  const { url } = req.body;
+
+  try {
+    // Actualizar la url de la reunión de la cita
+    const cita = await prisma.citas.update({
+      where: { id: parseInt(id) },
+      data: { url },
+    });
+
+    res.json({ message: "URL de reunión actualizada con éxito", cita });
+  } catch (error) {
+    res.status(500).json({ error: "Error al actualizar la URL de la reunión", details: error.message });
+  }
+});
+
 
 router.put("/citas/:id/confirm", async (req, res) => {
   const { id } = req.params;
@@ -186,17 +208,15 @@ router.put("/citas/:id/confirm", async (req, res) => {
   }
 
   try {
-    // Confirmar la cita e incluir información del profesor y el estudiante
     const citaConfirmada = await prisma.citas.update({
       where: { id: parseInt(id) },
       data: { status: "confirmed" },
-      include: { 
-        professor: true,  // Información del profesor
-        student: true     // Información del estudiante
+      include: {
+        professor: true,
+        student: true,
       },
     });
 
-    // Rechazar otras citas pendientes con la misma disponibilidad
     await prisma.citas.updateMany({
       where: {
         disponibilidadId: citaConfirmada.disponibilidadId,
@@ -206,18 +226,21 @@ router.put("/citas/:id/confirm", async (req, res) => {
       data: { status: "rejected" },
     });
 
-    // Crear una notificación en la base de datos usando el studentId de citaConfirmada
+    // Formatear la fecha
+    const formattedDate = format(new Date(citaConfirmada.date), "EEEE dd 'de' MMMM 'de' yyyy", { locale: es });
+
+    // Crear una notificación en la base de datos
     await prisma.notification.create({
       data: {
-        studentId: citaConfirmada.student.id, // Usamos el ID del estudiante obtenido en citaConfirmada
-        message: `Tu cita con el profesor ${citaConfirmada.professor.name} ha sido confirmada.`,
+        studentId: citaConfirmada.student.id,
+        message: `Tu cita con el profesor ${citaConfirmada.professor.name} el ${formattedDate} ha sido confirmada.`,
         citaId: citaConfirmada.id,
       },
     });
 
-    // Emitir una notificación al estudiante
+    // Emitir la notificación al estudiante
     io.to(`user_${citaConfirmada.student.id}`).emit("notification", {
-      message: `Tu cita con el profesor ${citaConfirmada.professor.name} ha sido confirmada.`,
+      message: `Tu cita con el profesor ${citaConfirmada.professor.name} el ${formattedDate} ha sido confirmada.`,
       cita: citaConfirmada,
     });
 

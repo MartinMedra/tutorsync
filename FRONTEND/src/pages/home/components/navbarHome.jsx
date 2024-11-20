@@ -1,10 +1,11 @@
+import propTypes from "prop-types";
 import {useState} from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link} from "@nextui-org/react";
 import {Link as LinkScroll } from "react-scroll";
 import LoginModal from "./loginModal";
 import RegisterModal from "./registerModal";
 
-export default function NavbarHome() {
+export default function NavbarHome({openLogin, openRegister}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -58,10 +59,10 @@ export default function NavbarHome() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="cursor-pointer">
-          <Link onClick={() => setIsLoginOpen(true)} className="text-gray-300 font-bold hover:text-rosado">Iniciar Sesión</Link>
+          <Link onClick={openLogin} className="text-gray-300 font-bold hover:text-rosado">Iniciar Sesión</Link>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
-          <button onClick={() => setIsRegisterOpen(true)} className="botonRegistro">Registrate</button>
+          <button onClick={openRegister} className="botonRegistro">Registrate</button>
         </NavbarItem>
       </NavbarContent>
       <NavbarMenu>
@@ -88,3 +89,9 @@ export default function NavbarHome() {
 </>
   );
 }
+
+
+NavbarHome.propTypes = {
+  openLogin: propTypes.func.isRequired,
+  openRegister: propTypes.func.isRequired,
+};

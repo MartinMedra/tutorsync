@@ -1,7 +1,7 @@
 export default function AboutUs() {
   return (
     <section className="text-gray-600 body-font min-h-screen shadow-white-glow" id="aboutUs">
-      <div className="container px-5 py-24 mx-auto" data-aos="fade-left" data-aos-duration="1800">
+      <div className="containerexplaint px-5 py-24 mx-auto" data-aos="fade-right" data-aos-duration="1800">
         <div className="flex flex-col text-center w-full mb-20">
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-white">
             Conoce un poco sobre nosotros

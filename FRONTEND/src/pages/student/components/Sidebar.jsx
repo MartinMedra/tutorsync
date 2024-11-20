@@ -31,6 +31,11 @@ function Sidebar({ selectedSection, setSelectedSection }) {
             <span>{section.name}</span>
           </button>
         ))}
+        <button key="logout" disabled className="flex items-center cursor-no-drop bg-gray-50 space-x-3 py-2 px-3 w-full text-left rounded-md">
+          <span>💭</span>
+          <span className="text-gray-300">Chat - Proximamente</span>
+        </button>
+
         <button onClick={handlelogout} key="logout" className="flex items-center space-x-3 py-2 px-3 w-full text-left rounded-md hover:bg-[#FF5484] hover:text-white hover:font-bold">
           <span>🚪</span>
           <span>Salir</span>

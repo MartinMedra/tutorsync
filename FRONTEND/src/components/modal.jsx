@@ -11,7 +11,7 @@ const Modal = ({ isOpen, closeModal, children }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20 " onClick={handleBackgroundClick}>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 " onClick={handleBackgroundClick}>
       <div className=" rounded-lg p-6 w-full max-w-fit relative z-50" >
         {children}
       </div>

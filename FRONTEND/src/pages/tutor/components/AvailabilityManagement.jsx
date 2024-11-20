@@ -3,23 +3,24 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext/AuthContext";
+import { useAlert } from "../../../context/AlertContext";
 
 const AvailabilityManagement = () => {
   const { user } = useContext(AuthContext);
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
-  const [message, setMessage] = useState("");
+
+  const {showAlert} = useAlert();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!user || user.role !== "Tutor") {
-      setMessage("Solo los profesores pueden crear disponibilidad.");
+      showAlert("Solo los profesores pueden crear disponibilidad.", "warning");
       return;
     }
 
-    // Combina la fecha con los tiempos de inicio y fin
     const startDateTime = new Date(
       `${date.toISOString().split("T")[0]}T${startTime.toISOString().split("T")[1]}`
     );
@@ -27,9 +28,8 @@ const AvailabilityManagement = () => {
       `${date.toISOString().split("T")[0]}T${endTime.toISOString().split("T")[1]}`
     );
 
-    // Validación: la hora de inicio debe ser anterior a la hora de fin
     if (startDateTime >= endDateTime) {
-      setMessage("La hora de inicio debe ser anterior a la hora de fin.");
+      showAlert("La hora de inicio debe ser anterior a la hora de fin.", "warning");
       return;
     }
 
@@ -47,17 +47,15 @@ const AvailabilityManagement = () => {
         }
       );
 
-      setMessage("Disponibilidad creada con éxito.");
+      showAlert("Disponibilidad creada con éxito.", "success");
     } catch (error) {
-      setMessage("Error al crear disponibilidad: " + error.response?.data?.error || error.message);
+      showAlert("Error al crear disponibilidad: " + (error.response?.data?.error || error.message), "failure");
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="disponibilidad-form">
       <h2 className="font-semibold">Crear Disponibilidad</h2>
-      {message && <p>{message}</p>}
-
       <div className="flex justify-evenly">
         <div>
           <DatePicker
@@ -70,7 +68,7 @@ const AvailabilityManagement = () => {
         </div>
         <div className="flex flex-col justify-evenly">
           <div className="flex flex-col gap-2">
-            <label className="text-green-400">Hora Inicio:</label>
+            <label className="text-[#1D5D90]">Hora Inicio:</label>
             <DatePicker
               selected={startTime}
               onChange={(newTime) => setStartTime(newTime)}
@@ -79,12 +77,11 @@ const AvailabilityManagement = () => {
               timeIntervals={15}
               timeCaption="Hora"
               dateFormat="h:mm aa"
-              className="w-full px-6 py-3 text-black bg-white border cursor-pointer border-green-400 rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+              className="w-full px-6 py-3 text-black bg-gray-50 border cursor-pointer border-[#1D5D90] rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
             />
           </div>
-
           <div className="flex flex-col gap-2">
-            <label className="text-red-400">Hora Fin:</label>
+            <label className="text-[#1D5D90]">Hora Fin:</label>
             <DatePicker
               selected={endTime}
               onChange={(newTime) => setEndTime(newTime)}
@@ -93,12 +90,11 @@ const AvailabilityManagement = () => {
               timeIntervals={15}
               timeCaption="Hora"
               dateFormat="h:mm aa"
-              className="w-full px-6 py-3 text-black bg-white border cursor-pointer border-red-400 rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+              className="w-full px-6 py-3 text-black bg-gray-50 border cursor-pointer border-[#1D5D90] rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
             />
           </div>
         </div>
       </div>
-
       <div className="flex justify-center">
         <button
           type="submit"
@@ -112,4 +108,3 @@ const AvailabilityManagement = () => {
 };
 
 export default AvailabilityManagement;
-

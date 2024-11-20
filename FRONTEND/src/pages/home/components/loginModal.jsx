@@ -4,15 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import Modal from '../../../components/modal.jsx';
 import propTypes from 'prop-types';
 import { AuthContext } from '../../../context/AuthContext/AuthContext.jsx';
-import RegisterModal from './registerModal';
 
-const LoginModal = ({ isOpen, closeModal }) => {
+const LoginModal = ({ isOpen, closeModal, openRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login, loading } = useContext(AuthContext);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,7 +31,7 @@ const LoginModal = ({ isOpen, closeModal }) => {
     <>
       <Modal isOpen={isOpen} closeModal={closeModal}>
         {/* <div className="containerLogin"> */}
-        <div className="form_area">
+        <div className="form_area animate-fade-up animate-duration-500">
           <p className="title">INICIA SESIÓN</p>
           <form onSubmit={handleLogin}>
             <div className="form_group">
@@ -56,13 +55,12 @@ const LoginModal = ({ isOpen, closeModal }) => {
             </div>
             <div>
               <button className="buttonHero w-full my-5 m-0 bg-rosado hover:text-rosado hover:border-rosado">Entrar</button>
-              <p>¿No tienes cuenta? <a className="cursor-pointer text-black font-semibold hover:text-rosado transform transition-all" onClick={() => {closeModal(); setIsRegisterOpen(true);}}>Registrate aquí!</a></p><a className="link" href="">
+              <p>¿No tienes cuenta? <a className="cursor-pointer text-black font-semibold hover:text-rosado transform transition-all" onClick={() => { closeModal(); openRegister(); }}>Registrate aquí!</a></p><a className="link" href="">
               </a>
             </div>
           </form>
         </div>
       </Modal>
-      <RegisterModal isOpen={isRegisterOpen} closeModal={() => setIsRegisterOpen(false)} />
     </>
   );
 };
@@ -70,6 +68,7 @@ const LoginModal = ({ isOpen, closeModal }) => {
 LoginModal.propTypes = {
   isOpen: propTypes.bool.isRequired,
   closeModal: propTypes.func.isRequired,
+  openRegister: propTypes.func.isRequired,
 };
 
 export default LoginModal;

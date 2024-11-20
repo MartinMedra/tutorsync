@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import jwt from 'jsonwebtoken';
+import bcrypt from "bcrypt";
 
 
 const router = Router();
@@ -56,7 +57,8 @@ router.get('/profile', authenticateToken, async (req, res)=>{
                 name: true,
                 email: true,
                 role: true,
-                identification: true,
+                subject: true,
+                password:true,
             }
         });
         res.json(user);
@@ -69,13 +71,21 @@ router.get('/profile', authenticateToken, async (req, res)=>{
  * Actualizar datos del perfil del usuario autenticado
  */
 router.put('/updateprofile', authenticateToken, async (req, res) => {
-  const { name, email, password, identification, subject } = req.body;
+    const { name, email, password, subject } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ error: 'El nombre y el correo son obligatorios.' });
+    }
+    
+    if (password && password.length < 6) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres.' });
+    }
 
   try {
       const updatedData = {
           name,
           email,
-          identification,
+          password,
           subject,
       };
 
