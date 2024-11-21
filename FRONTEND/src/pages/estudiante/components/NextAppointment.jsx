@@ -10,8 +10,6 @@ function NextAppointment() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let interval;
-    
     if (user) {
       async function fetchHistorial() {
         setLoading(true);
@@ -20,14 +18,22 @@ function NextAppointment() {
             `http://localhost:3000/citas/historial/${user.id}`
           );
   
-          const citasFuturas = response.data.filter((cita) =>
-            new Date(cita.date) >= new Date()
-          );
+          const now = new Date();
   
-          const citasOrdenadas = citasFuturas.sort((a, b) =>
-            new Date(a.date + " " + a.startTime) - new Date(b.date + " " + b.startTime)
-          );
+          // Filtrar las citas que ocurren a partir del momento actual
+          const citasFuturas = response.data.filter((cita) => {
+            const citaDateTime = new Date(`${cita.date}T${cita.startTime}`);
+            return citaDateTime >= now; // Incluye citas de hoy si están en el futuro
+          });
   
+          // Ordenar las citas por fecha y hora
+          const citasOrdenadas = citasFuturas.sort((a, b) => {
+            const aDateTime = new Date(`${a.date}T${a.startTime}`);
+            const bDateTime = new Date(`${b.date}T${b.startTime}`);
+            return aDateTime - bDateTime;
+          });
+  
+          // Seleccionar la cita más próxima
           setNextAppointment(citasOrdenadas[0] || null);
           setError(null);
         } catch (error) {
@@ -39,13 +45,9 @@ function NextAppointment() {
       }
   
       fetchHistorial();
-  
-      // Actualizar cada 30 segundos
-      interval = setInterval(fetchHistorial, 30000);
     }
-  
-    return () => clearInterval(interval); // Limpiar el intervalo al desmontar
   }, [user]);
+  
   
 
   const formatFecha = (date) => {
