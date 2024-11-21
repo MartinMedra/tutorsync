@@ -166,6 +166,11 @@ const AvailableTutors = () => {
         />
         <div>
           <ul className="grid grid-cols-3 gap-1">
+            {results.length === 0 && (
+              <p className="text-gray-500 font-light dark:text-gray-400">
+                No hay tutores disponibles.
+              </p>
+            )}
             {results.map((item) => (
               <li key={item.id}>
                 <div className="Tutorcard">

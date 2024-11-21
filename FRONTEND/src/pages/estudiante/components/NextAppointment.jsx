@@ -62,7 +62,7 @@ function NextAppointment() {
   }
 
   if (!nextAppointment) {
-    return <p>No tienes próximas citas</p>;
+    return <p><WarningCard  /></p>;
   }
 
   return (
