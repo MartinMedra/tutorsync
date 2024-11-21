@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -61,7 +61,7 @@ const AvailabilityManagement = () => {
           <DatePicker
             selected={date}
             onChange={(newDate) => setDate(newDate)}
-            minDate={new Date()}
+            minDate={new Date(new Date().setDate(new Date().getDate() + 1))}
             dateFormat="yyyy-MM-dd"
             inline
           />

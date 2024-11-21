@@ -11,7 +11,7 @@ function NextAppointment() {
 
   useEffect(() => {
     let interval;
-
+    
     if (user) {
       async function fetchHistorial() {
         setLoading(true);
@@ -19,22 +19,15 @@ function NextAppointment() {
           const response = await axios.get(
             `http://localhost:3000/citas/historial/${user.id}`
           );
-
-          const now = new Date();
-
-          // Filtrar las citas que ocurren a partir del momento actual
-          const citasFuturas = response.data.filter((cita) => {
-            const citaDateTime = new Date(`${cita.date}T${cita.startTime}`);
-            return citaDateTime >= now; // Incluye citas del día de hoy si están en el futuro
-          });
-
-          // Ordenar las citas por fecha y hora
-          const citasOrdenadas = citasFuturas.sort((a, b) => {
-            const aDateTime = new Date(`${a.date}T${a.startTime}`);
-            const bDateTime = new Date(`${b.date}T${b.startTime}`);
-            return aDateTime - bDateTime;
-          });
-
+  
+          const citasFuturas = response.data.filter((cita) =>
+            new Date(cita.date) >= new Date()
+          );
+  
+          const citasOrdenadas = citasFuturas.sort((a, b) =>
+            new Date(a.date + " " + a.startTime) - new Date(b.date + " " + b.startTime)
+          );
+  
           setNextAppointment(citasOrdenadas[0] || null);
           setError(null);
         } catch (error) {
@@ -44,15 +37,16 @@ function NextAppointment() {
           setLoading(false);
         }
       }
-
+  
       fetchHistorial();
-
+  
       // Actualizar cada 30 segundos
       interval = setInterval(fetchHistorial, 30000);
     }
-
+  
     return () => clearInterval(interval); // Limpiar el intervalo al desmontar
   }, [user]);
+  
 
   const formatFecha = (date) => {
     const options = { day: "numeric", month: "long" };
@@ -73,7 +67,7 @@ function NextAppointment() {
   }
 
   if (!nextAppointment) {
-    return <p><WarningCard /></p>;
+    return <p><WarningCard  /></p>;
   }
 
   return (
