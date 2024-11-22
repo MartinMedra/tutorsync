@@ -77,6 +77,16 @@ function NextAppointment() {
       <p className="text-gray-600">Hora: {formatHora(nextAppointment.startTime)}</p>
       <p className="text-gray-600">Profesor: {nextAppointment.professor.name}</p>
       <p className="text-gray-600">Modalidad: {nextAppointment.mode}</p>
+      {nextAppointment.url === "" ? null : (
+                  <a
+                    href={nextAppointment.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-500"
+                  >
+                    Enlace de la reunión
+                  </a>
+                )}
     </section>
   );
 }

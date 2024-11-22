@@ -34,7 +34,7 @@ const RequestAppointments = () => {
       setDisponibilidades(transformedData);
     } catch (error) {
       console.error(error);
-      showAlert("Error al cargar disponibilidades.", "error");
+      showAlert("Aún no hay disponibilidades.", "error");
     } finally {
       setLoading(false);
     }
@@ -54,6 +54,7 @@ const RequestAppointments = () => {
 
   // Confirmar una cita
   const confirmCita = async (citaId, disponibilidadId) => {
+    
     try {
       const response = await axios.put(
         `http://localhost:3000/citas/${citaId}/confirm`

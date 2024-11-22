@@ -1,6 +1,7 @@
 import propTypes from "prop-types";
 import { useState } from "react";
 import axios from "axios";
+import { useAlert } from "../../../context/AlertContext";
 
 const CitaCard = ({
   student,
@@ -8,27 +9,32 @@ const CitaCard = ({
   mode,
   status,
   onAccept,
-  onReject,
   citaId,
   actuallyUrl,
 }) => {
   const [url, setUrl] = useState("");
+  const { showAlert } = useAlert(); // Acceso al método para mostrar alertas
 
   const handleUrlChange = (event) => {
     setUrl(event.target.value);
   };
 
   const handleSaveUrl = async () => {
+    if (!url || url.trim() === "") {
+      showAlert("No puedes confirmar la cita sin proporcionar una URL válida.", "failure");
+      return;
+    }
+    
     try {
       const response = await axios.put(
         `http://localhost:3000/citas/${citaId}/url`,
         { url }
       );
       console.log("URL actualizada:", response.data.cita);
-      alert("URL actualizada correctamente");
+      showAlert("URL actualizada correctamente", "success");
     } catch (error) {
       console.error("Error al actualizar la URL:", error);
-      alert("Error al actualizar la URL");
+      showAlert("Error al actualizar la URL", "failure");
     }
   };
 
@@ -143,12 +149,12 @@ const CitaCard = ({
           >
             Confirmar
           </button>
-          <button
+          {/* <button
             onClick={onReject}
             className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md"
           >
             Rechazar
-          </button>
+          </button> */}
         </div>
       )}
     </div>

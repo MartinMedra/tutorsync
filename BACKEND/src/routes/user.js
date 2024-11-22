@@ -58,7 +58,7 @@ router.get('/profile', authenticateToken, async (req, res)=>{
                 email: true,
                 role: true,
                 subject: true,
-                password:true,
+
             }
         });
         res.json(user);
@@ -71,25 +71,20 @@ router.get('/profile', authenticateToken, async (req, res)=>{
  * Actualizar datos del perfil del usuario autenticado
  */
 router.put('/updateprofile', authenticateToken, async (req, res) => {
-    const { name, email, password, subject } = req.body;
+  const { name, email, password, subject } = req.body;
 
-    if (!name || !email) {
+  if (!name || !email) {
       return res.status(400).json({ error: 'El nombre y el correo son obligatorios.' });
-    }
-    
-    if (password && password.length < 6) {
-      return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres.' });
-    }
+  }
 
   try {
       const updatedData = {
           name,
           email,
-          password,
           subject,
       };
 
-      // Si se proporciona una contraseña nueva, hashearla antes de actualizarla
+      // Solo actualizamos la contraseña si se proporciona
       if (password) {
           updatedData.password = await bcrypt.hash(password, 10);
       }
@@ -104,6 +99,7 @@ router.put('/updateprofile', authenticateToken, async (req, res) => {
       res.status(500).json({ error: 'Error al actualizar el perfil', detail: error.message });
   }
 });
+
 
 /**
 * Eliminar el perfil del usuario autenticado

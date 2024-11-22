@@ -108,33 +108,92 @@ const RegisterModal = ({ isOpen, closeModal, openLogin }) => {
                     id="subject"
                   >
                     <option value="">Selecciona una materia</option>
-                    <option value="Arte">Arte</option>
-                    <option value="Biología">Biología</option>
-                    <option value="Ciencias Naturales">
-                      Ciencias Naturales
-                    </option>
-                    <option value="Ciencias Sociales">Ciencias Sociales</option>
-                    <option value="Comunicación Oral y Escrita">
-                      Comunicación Oral y Escrita
-                    </option>
-                    <option value="Educación Cívica">Educación Cívica</option>
-                    <option value="Ética y Valores">Ética y Valores</option>
-                    <option value="Emprendimiento o Economía">
-                      Emprendimiento o Economía
-                    </option>
-                    <option value="Filosofía">Filosofía</option>
-                    <option value="Física">Física</option>
-                    <option value="Geografía">Geografía</option>
-                    <option value="Historia">Historia</option>
-                    <option value="Inglés">Inglés</option>
-                    <option value="Lengua y Literatura">
-                      Lengua y Literatura
-                    </option>
-                    <option value="Matemáticas">Matemáticas</option>
-                    <option value="Música">Música</option>
-                    <option value="Química">Química</option>
-                    <option value="Religión">Religión</option>
-                    <option value="Tecnología">Tecnología</option>
+                    <option value="Administracion-de empresas">Administración de Empresas</option>
+                    <option value="Analisis-financiero">Análisis Financiero</option>
+                    <option value="Aplicaciones-contables">Aplicaciones Contables</option>
+                    <option value="Algebra lineal">Álgebra Lineal</option>
+                    <option value="Analisis de algoritmos">Análisis de Algoritmos</option>
+                    <option value="Antropologia">Antropología</option>
+                    <option value="Arquitectura de software">Arquitectura de Software</option>
+                    <option value="Arte y cultura">Arte y Cultura</option>
+                    <option value="Auditoria financiera">Auditoría Financiera</option>
+                    <option value="Bases de datos">Bases de Datos</option>
+                    <option value="Biologia">Biología</option>
+                    <option value="Bioquimica">Bioquímica</option>
+                    <option value="Biotecnologia">Biotecnología</option>
+                    <option value="Botanica">Botánica</option>
+                    <option value="Calculo diferencial">Cálculo Diferencial</option>
+                    <option value="Calculo integral">Cálculo Integral</option>
+                    <option value="Ciencias ambientales">Ciencias Ambientales</option>
+                    <option value="Ciencias politicas">Ciencias Políticas</option>
+                    <option value="Comunicacion oral y escrita">Comunicación Oral y Escrita</option>
+                    <option value="Contabilidad general">Contabilidad General</option>
+                    <option value="Control de calidad">Control de Calidad</option>
+                    <option value="Costos">Costos</option>
+                    <option value="Criminologia">Criminología</option>
+                    <option value="Derecho civil">Derecho Civil</option>
+                    <option value="Derecho penal">Derecho Penal</option>
+                    <option value="Derecho constitucional">Derecho Constitucional</option>
+                    <option value="Derecho laboral">Derecho Laboral</option>
+                    <option value="Diseño grafico">Diseño Gráfico</option>
+                    <option value="Diseño y desarrollo web">Diseño y Desarrollo Web</option>
+                    <option value="Economia">Economía</option>
+                    <option value="Estados financieros">Estados Financieros</option>
+                    <option value="Educacion fisica">Educación Física</option>
+                    <option value="Electricidad y magnetismo">Electricidad y Magnetismo</option>
+                    <option value="Electronica">Electrónica</option>
+                    <option value="Estadistica descriptiva">Estadística Descriptiva</option>
+                    <option value="Etica profesional">Ética Profesional</option>
+                    <option value="Filosofia">Filosofía</option>
+                    <option value="Fisica general">Física General</option>
+                    <option value="Fotografia">Fotografía</option>
+                    <option value="Fundamentos de programacion">Fundamentos de Programación</option>
+                    <option value="Geografia">Geografía</option>
+                    <option value="Geologia">Geología</option>
+                    <option value="Gestion ambiental">Gestión Ambiental</option>
+                    <option value="Gestion de proyectos">Gestión de Proyectos</option>
+                    <option value="Historia del arte">Historia del Arte</option>
+                    <option value="Historia universal">Historia Universal</option>
+                    <option value="Hidraulica">Hidráulica</option>
+                    <option value="Habilidades directivas">Habilidades Directivas</option>
+                    <option value="Ingenieria de software">Ingeniería de Software</option>
+                    <option value="Inteligencia artificial">Inteligencia Artificial</option>
+                    <option value="Introduccion a la psicologia">Introducción a la Psicología</option>
+                    <option value="Investigacion de mercados">Investigación de Mercados</option>
+                    <option value="Jerarquias de control">Jerarquías de Control</option>
+                    <option value="Justicia penal">Justicia Penal</option>
+                    <option value="Literatura">Literatura</option>
+                    <option value="Logica matematica">Lógica Matemática</option>
+                    <option value="Macroeconomia">Macroeconomía</option>
+                    <option value="Marketing digital">Marketing Digital</option>
+                    <option value="Matematicas discretas">Matemáticas Discretas</option>
+                    <option value="Medicina forense">Medicina Forense</option>
+                    <option value="Microbiologia">Microbiología</option>
+                    <option value="Negociacion y resolucion de conflictos">Negociación y Resolución de Conflictos</option>
+                    <option value="Nutricion">Nutrición</option>
+                    <option value="Organizacion industrial">Organización Industrial</option>
+                    <option value="Optica">Óptica</option>
+                    <option value="Psicologia clinica">Psicología Clínica</option>
+                    <option value="Programacion avanzada">Programación Avanzada</option>
+                    <option value="Proyectos de inversion">Proyectos de Inversión</option>
+                    <option value="Publicidad y relaciones publicas">Publicidad y Relaciones Públicas</option>
+                    <option value="Quimica general">Química General</option>
+                    <option value="Quimica organica">Química Orgánica</option>
+                    <option value="Redes y telecomunicaciones">Redes y Telecomunicaciones</option>
+                    <option value="Recursos humanos">Recursos Humanos</option>
+                    <option value="Salud publica">Salud Pública</option>
+                    <option value="Seguridad informatica">Seguridad Informática</option>
+                    <option value="Sociologia">Sociología</option>
+                    <option value="Sistemas operativos">Sistemas Operativos</option>
+                    <option value="Tecnicas de investigacion">Técnicas de Investigación</option>
+                    <option value="Tecnologia de la informacion">Tecnología de la Información</option>
+                    <option value="Termodinamica">Termodinámica</option>
+                    <option value="Toxicologia">Toxicología</option>
+                    <option value="Transporte y logistica">Transporte y Logística</option>
+                    <option value="Urbanismo">Urbanismo</option>
+                    <option value="Uso de tecnologias en la educacion">Uso de Tecnologías en la Educación</option>
+                    <option value="Valuacion de activos">Valuación de Activos</option>
+                    <option value="Ventas y estrategias comerciales">Ventas y Estrategias Comerciales</option>
                   </select>
                 </div>
               )}

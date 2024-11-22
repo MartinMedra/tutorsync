@@ -12,7 +12,7 @@ const AppoimentsHistory = () => {
       if (!user || loading) return; // Esperar a que el usuario esté disponible
       try {
         const response = await axios.get(
-          `http://localhost:3000/citas/historial/${user.id}`
+          `http://localhost:3000/citas/historial/profesor/${user.id}`
         );
         setCitas(response.data);
       } catch (err) {
@@ -44,9 +44,8 @@ const AppoimentsHistory = () => {
             >
               <div>
                 <h2 className="font-semibold">
-                  Profesor: {cita.professor.name}
+                  Profesor: {cita.student.name}
                 </h2>
-                <p>Asignatura: {cita.professor.subject}</p>
                 <p>Fecha: {new Date(cita.date).toLocaleDateString()}</p>
                 <p>
                   Hora:{" "}

@@ -123,6 +123,33 @@ router.get("/citas/historial/:studentId", async (req, res) => {
   }
 });
 
+// Obtener el historial de citas de un profesor
+router.get("/citas/historial/profesor/:professorId", async (req, res) => {
+  const { professorId } = req.params;
+
+  if (isNaN(professorId)) {
+    return res.status(400).json({ error: "ID de profesor inválido" });
+  }
+
+  try {
+    // Buscar las citas donde el profesor esté involucrado
+    const citasConfirmadas = await prisma.citas.findMany({
+      where: {
+        professorId: parseInt(professorId),
+        status: "confirmed", // Filtrar solo las confirmadas
+      },
+      include: {
+        student: true, // Incluir los datos del estudiante
+      },
+    });
+
+    res.json(citasConfirmadas);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener el historial de citas del profesor", details: error.message });
+  }
+});
+
+
 
 // Obtener todas las citas pendientes de un profesor
 router.get("/profesor/:id/citas", async (req, res) => {

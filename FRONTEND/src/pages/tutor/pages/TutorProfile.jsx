@@ -27,22 +27,28 @@ const TutorProfile = () => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   // Actualizar perfil
   const handleUpdate = async () => {
-    if (formData.password && formData.password !== formData.confirmPassword) {
-      alert("Las contraseñas no coinciden.");
-      return;
+    const updateData = { ...formData };
+  
+    // Eliminar campos de contraseñas si no se proporcionan
+    if (!formData.password) {
+      delete updateData.password;
     }
+    if (!formData.confirmPassword) {
+      delete updateData.confirmPassword;
+    }
+  
     try {
       setLoading(true);
-      await axios.put("http://localhost:3000/updateprofile", formData, {
+      await axios.put("http://localhost:3000/updateprofile", updateData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setProfile(formData);
+      setProfile(updateData); // Actualizar el perfil en el estado
       setIsEditing(false);
       alert("Perfil actualizado correctamente.");
     } catch (error) {
@@ -53,20 +59,6 @@ const TutorProfile = () => {
     }
   };
 
-  // Eliminar perfil
-  const handleDelete = async () => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar tu perfil?")) {
-      try {
-        await axios.delete("http://localhost:3000/deleteprofile", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        });
-        alert("Perfil eliminado correctamente.");
-        window.location.href = "/login";
-      } catch (error) {
-        console.error("Error al eliminar el perfil:", error);
-      }
-    }
-  };
 
   if (!profile) {
     return <p>Cargando perfil...</p>;
@@ -85,7 +77,9 @@ const TutorProfile = () => {
             onChange={handleChange}
             disabled={!isEditing}
             className={`w-full px-6 py-3 text-black border  rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm ${
-              isEditing ? "bg-white border-green-400" : "bg-gray-200 border-white cursor-not-allowed"
+              isEditing
+                ? "bg-white border-green-400"
+                : "bg-gray-200 border-white cursor-not-allowed"
             }`}
           />
         </div>
@@ -98,7 +92,9 @@ const TutorProfile = () => {
             onChange={handleChange}
             disabled={!isEditing}
             className={`w-full px-6 py-3 text-black border  rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm ${
-              isEditing ? "bg-white border-green-400" : "bg-gray-200 border-white cursor-not-allowed"
+              isEditing
+                ? "bg-white border-green-400"
+                : "bg-gray-200 border-white cursor-not-allowed"
             }`}
           />
         </div>
@@ -111,7 +107,9 @@ const TutorProfile = () => {
             onChange={handleChange}
             disabled={!isEditing}
             className={`w-full px-6 py-3 text-black border  rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm ${
-              isEditing ? "bg-white border-green-400" : "bg-gray-200 border-white cursor-not-allowed"
+              isEditing
+                ? "bg-white border-green-400"
+                : "bg-gray-200 border-white cursor-not-allowed"
             }`}
           />
         </div>
@@ -124,7 +122,9 @@ const TutorProfile = () => {
             placeholder="Nueva contraseña"
             disabled={!isEditing}
             className={`w-full px-6 py-3 text-black border  rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm ${
-              isEditing ? "bg-white border-green-400" : "bg-gray-200 border-white cursor-not-allowed"
+              isEditing
+                ? "bg-white border-green-400"
+                : "bg-gray-200 border-white cursor-not-allowed"
             }`}
           />
         </div>
@@ -139,34 +139,50 @@ const TutorProfile = () => {
             placeholder="Confirmar contraseña"
             disabled={!isEditing}
             className={`w-full px-6 py-3 text-black border  rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm ${
-              isEditing ? "bg-white border-green-400" : "bg-gray-200 border-white cursor-not-allowed"
+              isEditing
+                ? "bg-white border-green-400"
+                : "bg-gray-200 border-white cursor-not-allowed"
             }`}
           />
         </div>
       </form>
-      <div className="flex justify-between mt-6">
+      <div className="flex justify-center mt-6">
         {isEditing ? (
           <button
-            onClick={handleUpdate}
-            className="px-6 py-2 bg-green-500 hover:bg-green-600 rounded"
-            disabled={loading}
-          >
-            {loading ? "Guardando..." : "Guardar"}
-          </button>
+          onClick={handleUpdate}
+          disabled={loading}
+          className="relative flex items-center px-6 py-3 overflow-hidden font-medium transition-all bg-indigo-500 rounded-md group"
+        >
+          <span className="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-indigo-700 rounded group-hover:-mr-4 group-hover:-mt-4">
+            <span className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"></span>
+          </span>
+          <span className="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-indigo-700 rounded group-hover:-ml-4 group-hover:-mb-4">
+            <span className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"></span>
+          </span>
+          <span className="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-indigo-600 rounded-md group-hover:translate-x-0"></span>
+          <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white">
+          {loading ? "Guardando..." : "Guardar"}
+          </span>
+        </button>
+          
         ) : (
+          /* From Uiverse.io by Itskrish01 */
           <button
             onClick={() => setIsEditing(true)}
-            className="px-6 py-2 bg-blue-500 hover:bg-blue-600 rounded"
+            className="relative flex items-center px-6 py-3 overflow-hidden font-medium transition-all bg-indigo-500 rounded-md group"
           >
-            Editar
+            <span className="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-indigo-700 rounded group-hover:-mr-4 group-hover:-mt-4">
+              <span className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"></span>
+            </span>
+            <span className="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-indigo-700 rounded group-hover:-ml-4 group-hover:-mb-4">
+              <span className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"></span>
+            </span>
+            <span className="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-indigo-600 rounded-md group-hover:translate-x-0"></span>
+            <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white">
+              Editar
+            </span>
           </button>
         )}
-        <button
-          onClick={handleDelete}
-          className="px-6 py-2 bg-red-500 hover:bg-red-600 rounded"
-        >
-          Eliminar perfil
-        </button>
       </div>
     </div>
   );

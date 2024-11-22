@@ -61,6 +61,16 @@ const AppoimentsHistory = () => {
                   })}
                 </p>
                 <p>Modalidad: {cita.mode}</p>
+                {cita.url === "" ? null : (
+                  <a
+                    href={cita.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-500"
+                  >
+                    Enlace de la reunión
+                  </a>
+                )}
               </div>
               <span className="text-green-500 font-bold">Confirmada</span>
             </li>
