@@ -4,6 +4,7 @@ import AvailableTutors from "../pages/AvailableTutors";
 import ProfilePage from "../pages/UserProfile";
 import RequestPending from "../pages/RequestPending";
 import AppoimentsHistory from "../pages/AppointmentsHistory";
+import Chat from "../pages/Chat";
 
 function SectionContent({ selectedSection }) {
 
@@ -26,6 +27,11 @@ function SectionContent({ selectedSection }) {
       {selectedSection === "Perfil" && (
         <div className="col-span-3 text-center text-gray-500">
           <ProfilePage />
+        </div>
+      )}
+      {selectedSection === "Chat" && (
+        <div className="col-span-3 text-center text-gray-500">
+          <Chat />
         </div>
       )}
     </section>

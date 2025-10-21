@@ -19,6 +19,7 @@ model User {
   professorAppointments  Citas[]          @relation("ProfessorCitas")
   Disponibilidad         Disponibilidad[] // Disponibilidad del profesor
   notifications          Notification[]   @relation("UserNotifications")
+  messages               Message[]        // Mensajes enviados por el usuario
 }
 
 model Disponibilidad {
@@ -49,6 +50,7 @@ model Citas {
   status           String           // "pending", "accepted", "rejected"
   tickets          Ticket[]         // Eliminar tickets asociados automáticamente
   notifications    Notification[]   @relation("CitaNotifications")
+  rooms            Room[]           // Salas de chat asociadas a la cita
 }
 
 model Ticket {
@@ -70,4 +72,22 @@ model Notification {
   cita        Citas      @relation(fields: [citaId], references: [id], name: "CitaNotifications", onDelete: Cascade, onUpdate: Cascade)
   citaId      Int
   createdAt   DateTime   @default(now())
+}
+
+model Room {
+  id        Int       @id @default(autoincrement())
+  cita      Citas     @relation(fields: [citaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  citaId    Int       // Relación directa con la cita que habilitó el chat
+  messages  Message[] // Mensajes en esta sala
+  createdAt DateTime  @default(now()) // Fecha de creación de la sala
+}
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  room      Room      @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roomId    Int       // Sala donde se envió el mensaje
+  sender    User      @relation(fields: [senderId], references: [id])
+  senderId  Int       // Usuario que envió el mensaje
+  content   String    // Contenido del mensaje
+  createdAt DateTime  @default(now()) // Fecha y hora del mensaje
 }
